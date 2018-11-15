@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "247450571487",
+    "firebase_url": "https://bilalcell-store.firebaseio.com",
+    "project_id": "bilalcell-store",
+    "storage_bucket": "bilalcell-store.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:247450571487:android:fa0f19cc2ade2049",
+        "android_client_info": {
+          "package_name": "com.cell.bilalcell.bilalcellmanagers"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "247450571487-mtj52k8cp9cbve6kitpsihave1kcsno8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cell.bilalcell.bilalcellmanagers",
+            "certificate_hash": "acd83ba4831cde2ec612a2748bcd24cae0ba244f"
+          }
+        },
+        {
+          "client_id": "247450571487-fb3scg7q1jo3p8n586vh00otlofgi8lb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD0DYizvtMGJkdpdl96qJ_eQhtAC2yDDuU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "247450571487-fb3scg7q1jo3p8n586vh00otlofgi8lb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
