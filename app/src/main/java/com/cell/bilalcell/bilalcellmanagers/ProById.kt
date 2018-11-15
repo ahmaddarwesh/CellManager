@@ -84,7 +84,6 @@ class ProById : AppCompatActivity() {
             return list.size
         }
 
-
         class MyHolderPro2(view: View) : RecyclerView.ViewHolder(view) {
             var NamePro = view.findViewById<TextView>(R.id.tv_name_product)
             var ComName = view.findViewById<TextView>(R.id.tv_company_name)

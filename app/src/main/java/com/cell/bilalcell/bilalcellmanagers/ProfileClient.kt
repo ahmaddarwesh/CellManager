@@ -67,7 +67,7 @@ class ProfileClient : AppCompatActivity() {
                             }
 
                             override fun onError(e: java.lang.Exception?) {
-//                                Toast.makeText(this@ProfileClient, "Erroring ${e!!.message}", Toast.LENGTH_LONG).show()
+                                Toast.makeText(this@ProfileClient, "Erroring ${e!!.message}", Toast.LENGTH_LONG).show()
                                 Picasso.get().load(R.drawable.loading_profile).into(profile_info_image)
                             }
 

@@ -31,7 +31,8 @@
         <activity android:name=".ProfileClient" />
         <activity android:name=".CreateProduct" />
         <activity android:name=".SimServices" />
-        <activity android:name=".ProById"/>
+        <activity android:name=".ProById" />
+
     </application>
 
 </manifest>

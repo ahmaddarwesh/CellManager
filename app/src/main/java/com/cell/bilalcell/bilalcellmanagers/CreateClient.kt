@@ -89,6 +89,8 @@ class CreateClient : AppCompatActivity() {
             User.put("PhoneNumber", phone)
             User.put("Address", address)
             User.put("Description", desc)
+            User.put("img_url",urlImage.toString())
+            
             Users.document("USER_$id").set(User)
                     .addOnSuccessListener { it0 ->
                         uploadImage()
@@ -211,7 +213,6 @@ class CreateClient : AppCompatActivity() {
     }
 
     fun uploadImage() {
-
         try {
             mStorageRef = FirebaseStorage.getInstance().reference
 
@@ -220,7 +221,6 @@ class CreateClient : AppCompatActivity() {
             val ref = mStorageRef!!.child("profile_img/$id")
 
             val uploadTask = ref.putFile(file!!)
-
 
             uploadTask.continueWithTask { task ->
 
@@ -234,7 +234,6 @@ class CreateClient : AppCompatActivity() {
                     Users.document("USER_$id").update("img_url", downloadUri.toString())
                 } else {
                     Toast.makeText(this, "Not Success Upload", Toast.LENGTH_LONG).show()
-
                 }
             }
 

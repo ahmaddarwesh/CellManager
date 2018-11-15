@@ -76,11 +76,9 @@ class AccountsList : AppCompatActivity() {
 
 
         recy.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-
             override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-
                     isScrolled = true
                 }
             }
@@ -91,7 +89,6 @@ class AccountsList : AppCompatActivity() {
                 TotlalI = manager.itemCount
                 ScrolOutI = manager.findFirstVisibleItemPosition()
 
-
                 if (isScrolled) {
                     isScrolled = false
                     loadData()
@@ -99,10 +96,9 @@ class AccountsList : AppCompatActivity() {
             }
         })
 
-
         name_search.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                loadData()
+                loadAllData()
                 filtering(s.toString())
             }
 
@@ -125,9 +121,8 @@ class AccountsList : AppCompatActivity() {
     private fun loadData() {
         progressLoad.visibility = View.VISIBLE
         Handler().postDelayed({
-
-
             UsersD.whereGreaterThan("ID", list.size).orderBy("ID")
+                    .limit(10)
                     .get()
                     .addOnCompleteListener {
                         if(it.isSuccessful){
@@ -146,7 +141,30 @@ class AccountsList : AppCompatActivity() {
 
                     }
 
+        }, 2000)
+    }
 
+    private fun loadAllData() {
+        progressLoad.visibility = View.VISIBLE
+        Handler().postDelayed({
+            UsersD.whereGreaterThan("ID", list.size).orderBy("ID")
+                    .get()
+                    .addOnCompleteListener {
+                        if(it.isSuccessful){
+                            for (document in it.result!!) {
+                                val name = document.get("Name")
+                                val number = document.get("PhoneNumber")
+                                val ID = document.get("ID")
+                                list.add(clients(ID.toString(), name.toString(), number.toString()))
+                            }
+                            recy.adapter.notifyDataSetChanged()
+                            progressLoad.visibility = View.GONE
+                        }else{
+                            Toast.makeText(this, "ERROR ${it.exception}", Toast.LENGTH_LONG).show()
+                            progressLoad.visibility = View.GONE
+                        }
+
+                    }
 
         }, 2000)
     }
@@ -187,7 +205,6 @@ class AccountsList : AppCompatActivity() {
                     startActivity(Intent(context, ProById::class.java).putExtra("ID", list.id))
                     CustomIntent.customType(context, "up-to-bottom")
                 }
-
 
             }
             Picasso.get().load(R.drawable.loading_profile).into(holder.profile_Image)
