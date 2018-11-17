@@ -90,7 +90,8 @@ class CreateClient : AppCompatActivity() {
             User.put("Address", address)
             User.put("Description", desc)
             User.put("img_url",urlImage.toString())
-            
+
+
             Users.document("USER_$id").set(User)
                     .addOnSuccessListener { it0 ->
                         uploadImage()
