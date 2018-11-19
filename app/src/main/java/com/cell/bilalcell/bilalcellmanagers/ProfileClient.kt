@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.support.constraint.ConstraintLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.*
@@ -277,6 +278,13 @@ class ProfileClient : AppCompatActivity() {
             holder.NamePro.text = myL.ProductName
             holder.ComName.text = myL.CompanyName
             holder.Date.text = myL.Date
+            holder.lay.setOnClickListener {
+                conx.startActivity(Intent(conx,ProductInfo::class.java).
+                        putExtra("prod_name",myL.ProductName).
+                        putExtra("com_name",myL.CompanyName).
+                        putExtra("prod_date",myL.Date))
+
+            }
 
         }
 
@@ -290,6 +298,7 @@ class ProfileClient : AppCompatActivity() {
             var NamePro = view.findViewById<TextView>(R.id.tv_name_product)
             var ComName = view.findViewById<TextView>(R.id.tv_company_name)
             var Date = view.findViewById<TextView>(R.id.tv_date_product)
+            var lay = view.findViewById<ConstraintLayout>(R.id.lay_product)
         }
 
     }

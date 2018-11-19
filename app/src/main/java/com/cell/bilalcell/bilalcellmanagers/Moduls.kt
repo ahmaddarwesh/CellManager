@@ -5,12 +5,7 @@ import java.net.URI
 import java.net.URL
 
 data class CompanyItems(var Name :String,var Logo:Int)
-data class User(var id: String,
-                var username: String,
-                var updated_at: String,
-                var created_at: String)
 
-data class Users(var status: String, var clients: Array<clients>)
 
 data class clients(var id: String,
                    var username: String,

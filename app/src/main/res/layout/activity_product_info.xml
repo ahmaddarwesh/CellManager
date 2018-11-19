@@ -11,13 +11,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:fontFamily="sans-serif"
         android:text="Galaxy Note 9+"
         android:textColor="@color/common_google_signin_btn_text_dark_focused"
         android:textSize="36sp"
         app:layout_constraintStart_toEndOf="@+id/imageView3"
-        app:layout_constraintTop_toBottomOf="@+id/tv_com_name" />
+        app:layout_constraintTop_toBottomOf="@+id/divider11" />
 
     <TextView
         android:id="@+id/tv_com_name"
@@ -40,9 +40,8 @@
         android:layout_width="84dp"
         android:layout_height="113dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_com_name"
+        app:layout_constraintTop_toBottomOf="@+id/divider11"
         app:srcCompat="@drawable/phone" />
 
     <TextView
@@ -75,6 +74,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
+        android:background="@drawable/backg_card"
         android:fontFamily="serif"
         android:gravity="center"
         android:padding="5dp"
@@ -90,8 +90,8 @@
         android:id="@+id/tv_pro_client"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
         android:background="@drawable/backg_card"
         android:fontFamily="sans-serif"
         android:padding="5dp"
@@ -109,38 +109,38 @@
         android:layout_height="0dp"
         android:layout_margin="5dp"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
         android:background="@color/grayLite"
-        app:layout_constraintBottom_toTopOf="@+id/tv_remainder"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
     <TextView
-        android:id="@+id/tv_count_pay"
+        android:id="@+id/tv_remainder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="23dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
         android:fontFamily="serif"
-        android:text="4"
+        android:text="520$"
         android:textColor="@color/greenDark"
-        android:textSize="36sp"
+        android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tv_remainder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <View
+        android:id="@+id/divider11"
+        android:layout_width="368dp"
+        android:layout_height="1dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:text="520$"
-        android:textColor="@color/main_blue_color"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@color/gray_btn_bg_color"
+        app:layout_constraintBottom_toTopOf="@+id/tv_pro_name"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_pro_time" />
 
 </android.support.constraint.ConstraintLayout>

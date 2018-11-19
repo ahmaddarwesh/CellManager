@@ -19,11 +19,7 @@
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:icon">
         <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".AccountsList" />
         <activity android:name=".HomeActivity" />
@@ -32,7 +28,14 @@
         <activity android:name=".CreateProduct" />
         <activity android:name=".SimServices" />
         <activity android:name=".ProById" />
-        <activity android:name=".ProductInfo"></activity>
+        <activity android:name=".ProductInfo" />
+        <activity android:name=".splashScreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

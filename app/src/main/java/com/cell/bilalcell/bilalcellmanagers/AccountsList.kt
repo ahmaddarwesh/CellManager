@@ -41,9 +41,11 @@ class AccountsList : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_accounts_list)
+        if (!intent.extras.isEmpty){
+            val type = intent.extras.getInt("type")
+            t = type
+        }
 
-        val type = intent.extras.getInt("type")
-        t = type
 
         progressBar.visibility = View.VISIBLE
 
@@ -257,7 +259,7 @@ class AccountsList : AppCompatActivity() {
                                                             SweetAlertDialog.SUCCESS_TYPE,
                                                             "Done").setConfirmButton("Done") {
                                                         it.dismiss()
-                                                        startActivity(Intent(this@AccountsList, AccountsList::class.java))
+                                                        startActivity(Intent(this@AccountsList,AccountsList::class.java))
                                                         finish()
                                                     }.show()
                                                 }
