@@ -83,11 +83,11 @@
 
         <ImageView
             android:id="@+id/Servises_Sim"
-            android:layout_width="100dp"
-            android:layout_height="80dp"
-            android:layout_marginEnd="28dp"
+            android:layout_width="90dp"
+            android:layout_height="75dp"
             android:layout_marginStart="21dp"
             android:layout_marginTop="20dp"
+            android:layout_marginEnd="28dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/divider5"
             app:layout_constraintTop_toBottomOf="@+id/divider"

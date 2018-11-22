@@ -4,16 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/message_color"
+    android:background="@drawable/backg_btn"
     tools:context="com.cell.bilalcell.bilalcellmanagers.MainActivity">
 
     <Button
         android:id="@+id/btnLogin"
-        android:layout_width="302dp"
-        android:layout_height="40dp"
-        android:layout_marginBottom="24dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginStart="4dp"
+        android:layout_width="132dp"
+        android:layout_height="37dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="45dp"
+        android:layout_marginBottom="27dp"
         android:background="@drawable/backg_btn"
         android:text="Login"
         android:textAlignment="center"
@@ -22,17 +22,16 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edtpass"
-        app:layout_constraintVertical_bias="0.169" />
+        app:layout_constraintVertical_bias="0.092" />
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/edtpass"
         android:layout_width="300.5dp"
         android:layout_height="47dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="4dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:hint="@string/password"
         app:hintEnabled="false"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -59,9 +58,9 @@
         android:id="@+id/edt_username"
         android:layout_width="300dp"
         android:layout_height="47dp"
-        android:layout_marginEnd="4dp"
         android:layout_marginStart="4dp"
-        android:layout_marginTop="22dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="4dp"
         android:background="@drawable/backg_tf"
         android:drawableStart="@drawable/ic_person_outline_black_24dp"
         android:ems="10"
@@ -70,35 +69,70 @@
         android:padding="10dp"
         android:textColor="@android:color/black"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.65" />
+        app:layout_constraintTop_toBottomOf="@+id/textView15" />
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout2"
         android:layout_width="0dp"
-        android:layout_height="279dp"
-        android:layout_marginBottom="11dp"
+        android:layout_height="141dp"
         android:background="@drawable/backg_tf"
-        app:layout_constraintBottom_toTopOf="@+id/edt_username"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.039">
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/imglogo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="289dp"
+            android:layout_height="57dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0"
-            app:srcCompat="@drawable/logo" />
+            app:srcCompat="@drawable/cell_manager" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="For Mangment your Busness"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imglogo" />
     </android.support.constraint.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="64dp"
+        android:text="Need Help?"
+        android:textColor="@color/button_text_color"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@+id/btnLogin"
+        app:layout_constraintTop_toBottomOf="@+id/edtpass" />
+
+    <TextView
+        android:id="@+id/textView15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:background="@color/common_google_signin_btn_text_light_disabled"
+        android:padding="10dp"
+        android:text="Login Require to begain use Application"
+        android:textAlignment="center"
+        android:textColor="@color/ic_launcher_background"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.555"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
 
 </android.support.constraint.ConstraintLayout>

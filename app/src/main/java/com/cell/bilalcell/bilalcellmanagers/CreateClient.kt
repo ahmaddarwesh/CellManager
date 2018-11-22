@@ -2,6 +2,7 @@ package com.cell.bilalcell.bilalcellmanagers
 
 import android.app.Activity
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -19,6 +20,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import java.util.*
 
 import android.graphics.Bitmap
+import android.net.ConnectivityManager
 import android.net.Uri
 import android.view.View
 import com.google.firebase.storage.FirebaseStorage
@@ -50,7 +52,12 @@ class CreateClient : AppCompatActivity() {
             }
 
             override fun onCancelled(p0: DatabaseError) {
-                Toast.makeText(this@CreateClient, p0.message, Toast.LENGTH_LONG).show()
+                sweetAlertDialog("Error",
+                        p0.message,
+                        SweetAlertDialog.ERROR_TYPE,
+                        "Ok").setConfirmButton("Ok") {
+                    it.dismiss()
+                }.show()
             }
 
         })
@@ -69,7 +76,12 @@ class CreateClient : AppCompatActivity() {
                 val Info = " ID : $id \n NAME : $name\n PHONE NUMBER : $phone\n ADDRESS : $address\n\n DESCRIPTION :\n $desc"
                 DialogPreview(Info)
             } catch (e: Exception) {
-                Toast.makeText(this, "ERROR ${e.message}", Toast.LENGTH_LONG).show()
+                sweetAlertDialog("Error",
+                        "${e.message}",
+                        SweetAlertDialog.ERROR_TYPE,
+                        "Ok").setConfirmButton("Ok") {
+                    it.dismiss()
+                }.show()
             }
 
         }
@@ -77,6 +89,7 @@ class CreateClient : AppCompatActivity() {
         imgSuccess.setOnClickListener { it ->
             progressBarLoading.visibility = View.VISIBLE
             linearLayoutS.visibility = View.GONE
+
 
             val id: Int = Cookies().getInt(this, "ID")
             val name = edt_fullname.text.toString()
@@ -89,41 +102,51 @@ class CreateClient : AppCompatActivity() {
             User.put("PhoneNumber", phone)
             User.put("Address", address)
             User.put("Description", desc)
-            User.put("img_url",urlImage.toString())
+            User.put("img_url", urlImage.toString())
+            if (!isOnline()) {
+                progressBarLoading.visibility = View.GONE
+                linearLayoutS.visibility = View.VISIBLE
+                sweetAlertDialog("Error",
+                        "Check Your Internet Connection!",
+                        SweetAlertDialog.ERROR_TYPE,
+                        "Ok").setConfirmButton("Ok") {
+                    it.dismiss()
+                }.show()
+            } else {
+                Users.document("USER_$id").set(User)
+                        .addOnSuccessListener { it0 ->
+                            uploadImage()
+                            progressBarLoading.visibility = View.GONE
+                            linearLayoutS.visibility = View.VISIBLE
+                            val id1 = id + 1
+                            Cookies().SaveInt(this, "ID", id1)
+                            Count.setValue(id1)
 
+                            sweetAlertDialog("Success",
+                                    "Successfully added client",
+                                    SweetAlertDialog.SUCCESS_TYPE,
+                                    "Done").setConfirmButton("Done") {
 
-            Users.document("USER_$id").set(User)
-                    .addOnSuccessListener { it0 ->
-                        uploadImage()
-                        progressBarLoading.visibility = View.GONE
-                        linearLayoutS.visibility = View.VISIBLE
-                        val id1 = id + 1
-                        Cookies().SaveInt(this, "ID", id1)
-                        Count.setValue(id1)
+                                startActivity(Intent(this, ProfileClient::class.java)
+                                        .putExtra("ID", id.toString())
+                                        .putExtra("Name", name).putExtra("Number", phone))
+                                finish()
+                            }.show()
 
-                        sweetAlertDialog("Success",
-                                "Successfully added client",
-                                SweetAlertDialog.SUCCESS_TYPE,
-                                "Done").setConfirmButton("Done") {
+                        }
+                        .addOnFailureListener { it1 ->
+                            sweetAlertDialog("Error",
+                                    "${it1.message}",
+                                    SweetAlertDialog.ERROR_TYPE,
+                                    "Ok").setConfirmButton("Ok") {
+                                it.dismiss()
+                            }.show()
+                            progressBarLoading.visibility = View.GONE
+                            linearLayoutS.visibility = View.VISIBLE
 
-                            startActivity(Intent(this, ProfileClient::class.java)
-                                    .putExtra("ID", id.toString())
-                                    .putExtra("Name", name).putExtra("Number", phone))
-                            finish()
-                        }.show()
+                        }
+            }
 
-                    }
-                    .addOnFailureListener { it1 ->
-                        sweetAlertDialog("Error",
-                                "${it1.message}",
-                                SweetAlertDialog.ERROR_TYPE,
-                                "Ok").setConfirmButton("Ok") {
-                            it.dismiss()
-                        }.show()
-                        progressBarLoading.visibility = View.GONE
-                        linearLayoutS.visibility = View.VISIBLE
-
-                    }
 
         }
 
@@ -177,40 +200,54 @@ class CreateClient : AppCompatActivity() {
 
             imgCam.setOnClickListener {
                 val camera = Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
-                startActivityForResult(camera, requst)
                 dialog.dismiss()
+                startActivityForResult(camera, requst)
+
             }
             imgGall.setOnClickListener {
                 val photoPickerIntent = Intent(Intent.ACTION_PICK)
                 photoPickerIntent.type = "image/*"
-                startActivityForResult(photoPickerIntent, requstGallery)
                 dialog.dismiss()
+                startActivityForResult(photoPickerIntent, requstGallery)
+
             }
             dialog.show()
         } catch (E: Exception) {
-            Toast.makeText(this, E.message, Toast.LENGTH_LONG).show()
+            sweetAlertDialog("Error",
+                    "${E.message}",
+                    SweetAlertDialog.ERROR_TYPE,
+                    "Ok").setConfirmButton("Ok") {
+                it.dismiss()
+            }.show()
         }
 
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
 
-        if (requestCode == requst && resultCode == Activity.RESULT_OK) {
-            val bit: Bitmap = data.extras.get("data") as Bitmap
-            val selectedImage = MediaStore.Images.Media.insertImage(contentResolver, bit, "any", null);
-            urlImage = Uri.parse(selectedImage)
-            profile_info_image.setImageBitmap(bit)
+        try {
+            if (requestCode == requst && resultCode == Activity.RESULT_OK && data.data != null) {
+                val bit: Bitmap = data.extras.get("data") as Bitmap
+                val selectedImage = MediaStore.Images.Media.insertImage(contentResolver, bit, "any", null);
+                urlImage = Uri.parse(selectedImage)
+                profile_info_image.setImageBitmap(bit)
 
-        } else if (requestCode == requstGallery && resultCode == Activity.RESULT_OK) {
-            val selectedImage = data.data
-            urlImage = selectedImage
-            profile_info_image.setImageURI(selectedImage)
+            } else if (requestCode == requstGallery && resultCode == Activity.RESULT_OK&& data.data != null) {
+                val selectedImage = data.data
+                urlImage = selectedImage
+                profile_info_image.setImageURI(selectedImage)
+            } else {
 
-        } else {
-            val selectedImage = data.data
-            urlImage = selectedImage
-
+            }
+        } catch (e: Exception) {
+            sweetAlertDialog("Error",
+                    "No image Selected ${e.message}",
+                    SweetAlertDialog.ERROR_TYPE,
+                    "Ok").setConfirmButton("Ok") {
+                it.dismiss()
+            }.show()
         }
+
     }
 
     fun uploadImage() {
@@ -234,12 +271,22 @@ class CreateClient : AppCompatActivity() {
                     val downloadUri = task.result
                     Users.document("USER_$id").update("img_url", downloadUri.toString())
                 } else {
-                    Toast.makeText(this, "Not Success Upload", Toast.LENGTH_LONG).show()
+                    sweetAlertDialog("Error",
+                            "Image not Uploaded",
+                            SweetAlertDialog.ERROR_TYPE,
+                            "Ok").setConfirmButton("Ok") {
+                        it.dismiss()
+                    }.show()
                 }
             }
 
         } catch (E: Exception) {
-            Toast.makeText(this, "Error ${E.message}", Toast.LENGTH_LONG).show()
+            sweetAlertDialog("Error",
+                    "${E.message}",
+                    SweetAlertDialog.ERROR_TYPE,
+                    "Ok").setConfirmButton("Ok") {
+                it.dismiss()
+            }.show()
         }
 
 
@@ -251,10 +298,10 @@ class CreateClient : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (edt_fullname.text.isEmpty()&& edt_phonenumber.text.isEmpty()
+        if (edt_fullname.text.isEmpty() && edt_phonenumber.text.isEmpty()
                 && edt_address.text.isEmpty() && edt_desc.text.isEmpty()) {
             finish()
-        }else{
+        } else {
             sweetAlertConf("Discard info?", "Are you sure discard information typed?",
                     SweetAlertDialog.WARNING_TYPE, "Exit", "Cancel").setConfirmButton("Exit") {
                 finish()
@@ -263,5 +310,11 @@ class CreateClient : AppCompatActivity() {
             }.show()
         }
 
+    }
+
+    fun isOnline(): Boolean {
+        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val netInfo = cm.activeNetworkInfo
+        return netInfo != null && netInfo.isConnectedOrConnecting
     }
 }
