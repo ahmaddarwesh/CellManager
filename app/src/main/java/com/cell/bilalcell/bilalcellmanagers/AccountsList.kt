@@ -32,20 +32,15 @@ class AccountsList : AppCompatActivity() {
     private var UsersD = db.collection("Users")
     private val list = ArrayList<clients>()
     private var t: Int = 0
-    private var manager = LinearLayoutManager(this)
-    private var CerrnentI = 0
-    private var TotlalI = 0
-    private var ScrolOutI = 0
-    private var isScrolled = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_accounts_list)
-        if (!intent.extras.isEmpty){
+        if (!intent.extras.isEmpty) {
             val type = intent.extras.getInt("type")
             t = type
         }
-
 
         progressBar.visibility = View.VISIBLE
 
@@ -76,28 +71,6 @@ class AccountsList : AppCompatActivity() {
             }
         }
 
-
-        recy.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-                    isScrolled = true
-                }
-            }
-
-            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                CerrnentI = manager.childCount
-                TotlalI = manager.itemCount
-                ScrolOutI = manager.findFirstVisibleItemPosition()
-
-                if (isScrolled) {
-                    isScrolled = false
-                    loadData()
-                }
-            }
-        })
-
         name_search.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 loadAllData()
@@ -120,39 +93,13 @@ class AccountsList : AppCompatActivity() {
 
     }
 
-    private fun loadData() {
-        progressLoad.visibility = View.VISIBLE
-        Handler().postDelayed({
-            UsersD.whereGreaterThan("ID", list.size).orderBy("ID")
-                    .limit(10)
-                    .get()
-                    .addOnCompleteListener {
-                        if(it.isSuccessful){
-                            for (document in it.result!!) {
-                                val name = document.get("Name")
-                                val number = document.get("PhoneNumber")
-                                val ID = document.get("ID")
-                                list.add(clients(ID.toString(), name.toString(), number.toString()))
-                            }
-                            recy.adapter.notifyDataSetChanged()
-                            progressLoad.visibility = View.GONE
-                        }else{
-                            Toast.makeText(this, "ERROR ${it.exception}", Toast.LENGTH_LONG).show()
-                            progressLoad.visibility = View.GONE
-                        }
-
-                    }
-
-        }, 2000)
-    }
-
     private fun loadAllData() {
         progressLoad.visibility = View.VISIBLE
         Handler().postDelayed({
             UsersD.whereGreaterThan("ID", list.size).orderBy("ID")
                     .get()
                     .addOnCompleteListener {
-                        if(it.isSuccessful){
+                        if (it.isSuccessful) {
                             for (document in it.result!!) {
                                 val name = document.get("Name")
                                 val number = document.get("PhoneNumber")
@@ -161,7 +108,7 @@ class AccountsList : AppCompatActivity() {
                             }
                             recy.adapter.notifyDataSetChanged()
                             progressLoad.visibility = View.GONE
-                        }else{
+                        } else {
                             Toast.makeText(this, "ERROR ${it.exception}", Toast.LENGTH_LONG).show()
                             progressLoad.visibility = View.GONE
                         }
@@ -204,7 +151,7 @@ class AccountsList : AppCompatActivity() {
                             .putExtra("Number", list.mobile))
                     CustomIntent.customType(context, "up-to-bottom")
                 } else {
-                    startActivity(Intent(context, ProById::class.java).putExtra("ID", list.id))
+                    startActivity(Intent(context, ProById::class.java).putExtra("ID", list.id).putExtra("nameOfUser",list.username))
                     CustomIntent.customType(context, "up-to-bottom")
                 }
 
@@ -259,7 +206,7 @@ class AccountsList : AppCompatActivity() {
                                                             SweetAlertDialog.SUCCESS_TYPE,
                                                             "Done").setConfirmButton("Done") {
                                                         it.dismiss()
-                                                        startActivity(Intent(this@AccountsList,AccountsList::class.java))
+                                                        startActivity(Intent(this@AccountsList, AccountsList::class.java))
                                                         finish()
                                                     }.show()
                                                 }

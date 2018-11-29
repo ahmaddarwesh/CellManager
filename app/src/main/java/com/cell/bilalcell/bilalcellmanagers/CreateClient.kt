@@ -62,7 +62,7 @@ class CreateClient : AppCompatActivity() {
 
         })
 
-        imgbtnadd.setOnClickListener {
+        profile_info_image.setOnClickListener {
             showDialog(this)
         }
 
@@ -87,64 +87,77 @@ class CreateClient : AppCompatActivity() {
         }
 
         imgSuccess.setOnClickListener { it ->
-            progressBarLoading.visibility = View.VISIBLE
-            linearLayoutS.visibility = View.GONE
 
-
-            val id: Int = Cookies().getInt(this, "ID")
-            val name = edt_fullname.text.toString()
-            val phone = edt_phonenumber.text.toString()
-            val address = edt_address.text.toString()
-            val desc = edt_desc.text.toString()
-            val User = HashMap<String, Any>()
-            User.put("ID", id)
-            User.put("Name", name)
-            User.put("PhoneNumber", phone)
-            User.put("Address", address)
-            User.put("Description", desc)
-            User.put("img_url", urlImage.toString())
-            if (!isOnline()) {
-                progressBarLoading.visibility = View.GONE
-                linearLayoutS.visibility = View.VISIBLE
-                sweetAlertDialog("Error",
-                        "Check Your Internet Connection!",
+            if (edt_fullname.text.trim().isEmpty() || edt_phonenumber.text.trim().isEmpty()
+                    || edt_address.text.trim().isEmpty() || edt_desc.text.trim().isEmpty()) {
+                sweetAlertDialog("Field Empty!",
+                        "Please complete all information of client to continue",
                         SweetAlertDialog.ERROR_TYPE,
                         "Ok").setConfirmButton("Ok") {
                     it.dismiss()
                 }.show()
             } else {
-                Users.document("USER_$id").set(User)
-                        .addOnSuccessListener { it0 ->
-                            uploadImage()
-                            progressBarLoading.visibility = View.GONE
-                            linearLayoutS.visibility = View.VISIBLE
-                            val id1 = id + 1
-                            Cookies().SaveInt(this, "ID", id1)
-                            Count.setValue(id1)
+                progressBarLoading.visibility = View.VISIBLE
+                linearLayoutS.visibility = View.GONE
 
-                            sweetAlertDialog("Success",
-                                    "Successfully added client",
-                                    SweetAlertDialog.SUCCESS_TYPE,
-                                    "Done").setConfirmButton("Done") {
 
-                                startActivity(Intent(this, ProfileClient::class.java)
-                                        .putExtra("ID", id.toString())
-                                        .putExtra("Name", name).putExtra("Number", phone))
-                                finish()
-                            }.show()
+                val id: Int = Cookies().getInt(this, "ID")
+                val name = edt_fullname.text.toString()
+                val phone = edt_phonenumber.text.toString()
+                val address = edt_address.text.toString()
+                val desc = edt_desc.text.toString()
+                val User = HashMap<String, Any>()
+                User.put("ID", id)
+                User.put("Name", name)
+                User.put("PhoneNumber", phone)
+                User.put("Address", address)
+                User.put("Description", desc)
+                User.put("CountProduct", 0)
+                User.put("img_url", urlImage.toString())
 
-                        }
-                        .addOnFailureListener { it1 ->
-                            sweetAlertDialog("Error",
-                                    "${it1.message}",
-                                    SweetAlertDialog.ERROR_TYPE,
-                                    "Ok").setConfirmButton("Ok") {
-                                it.dismiss()
-                            }.show()
-                            progressBarLoading.visibility = View.GONE
-                            linearLayoutS.visibility = View.VISIBLE
+                if (!isOnline()) {
+                    progressBarLoading.visibility = View.GONE
+                    linearLayoutS.visibility = View.VISIBLE
+                    sweetAlertDialog("Error",
+                            "Check Your Internet Connection!",
+                            SweetAlertDialog.ERROR_TYPE,
+                            "Ok").setConfirmButton("Ok") {
+                        it.dismiss()
+                    }.show()
+                } else {
+                    Users.document("USER_$id").set(User)
+                            .addOnSuccessListener { it0 ->
+                                uploadImage()
+                                progressBarLoading.visibility = View.GONE
+                                linearLayoutS.visibility = View.VISIBLE
+                                val id1 = id + 1
+                                Cookies().SaveInt(this, "ID", id1)
+                                Count.setValue(id1)
 
-                        }
+                                sweetAlertDialog("Success",
+                                        "Successfully added client",
+                                        SweetAlertDialog.SUCCESS_TYPE,
+                                        "Done").setConfirmButton("Done") {
+
+                                    startActivity(Intent(this, ProfileClient::class.java)
+                                            .putExtra("ID", id.toString())
+                                            .putExtra("Name", name).putExtra("Number", phone))
+                                    finish()
+                                }.show()
+
+                            }
+                            .addOnFailureListener { it1 ->
+                                sweetAlertDialog("Error",
+                                        "${it1.message}",
+                                        SweetAlertDialog.ERROR_TYPE,
+                                        "Ok").setConfirmButton("Ok") {
+                                    it.dismiss()
+                                }.show()
+                                progressBarLoading.visibility = View.GONE
+                                linearLayoutS.visibility = View.VISIBLE
+
+                            }
+                }
             }
 
 
@@ -226,19 +239,27 @@ class CreateClient : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
 
         try {
-            if (requestCode == requst && resultCode == Activity.RESULT_OK && data.data != null) {
-                val bit: Bitmap = data.extras.get("data") as Bitmap
-                val selectedImage = MediaStore.Images.Media.insertImage(contentResolver, bit, "any", null);
-                urlImage = Uri.parse(selectedImage)
-                profile_info_image.setImageBitmap(bit)
+            if (requestCode == requst) {
+                if(resultCode == Activity.RESULT_OK){
+                    val bit: Bitmap = data.extras.get("data") as Bitmap
+                    val selectedImage = MediaStore.Images.Media.insertImage(contentResolver, bit, "any", null);
+                    urlImage = Uri.parse(selectedImage)
+                    profile_info_image.setImageBitmap(bit)
+                }
 
-            } else if (requestCode == requstGallery && resultCode == Activity.RESULT_OK&& data.data != null) {
+            } else if (requestCode == requstGallery  ) {
+                if(resultCode == Activity.RESULT_OK){
+                    val selectedImage = data.data
+                    urlImage = selectedImage
+                    profile_info_image.setImageURI(selectedImage)
+                }
+
+            } else {
+                Toast.makeText(this, "From else", Toast.LENGTH_LONG).show()
                 val selectedImage = data.data
                 urlImage = selectedImage
-                profile_info_image.setImageURI(selectedImage)
-            } else {
-
             }
+
         } catch (e: Exception) {
             sweetAlertDialog("Error",
                     "No image Selected ${e.message}",
@@ -255,7 +276,7 @@ class CreateClient : AppCompatActivity() {
             mStorageRef = FirebaseStorage.getInstance().reference
 
             val file = urlImage
-            val id = Cookies().getInt(this, "ID") - 1
+            val id = Cookies().getInt(this, "ID")
             val ref = mStorageRef!!.child("profile_img/$id")
 
             val uploadTask = ref.putFile(file!!)
@@ -264,11 +285,13 @@ class CreateClient : AppCompatActivity() {
 
                 if (!task.isSuccessful) {
                     throw task.exception!!
+                } else {
+                    ref.downloadUrl
                 }
-                ref.downloadUrl
+
             }.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    val downloadUri = task.result
+                    val downloadUri = task.result!!
                     Users.document("USER_$id").update("img_url", downloadUri.toString())
                 } else {
                     sweetAlertDialog("Error",
@@ -298,11 +321,11 @@ class CreateClient : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (edt_fullname.text.isEmpty() && edt_phonenumber.text.isEmpty()
-                && edt_address.text.isEmpty() && edt_desc.text.isEmpty()) {
+        if (edt_fullname.text.trim().isEmpty() && edt_phonenumber.text.trim().isEmpty()
+                && edt_address.text.trim().isEmpty() && edt_desc.text.trim().isEmpty()) {
             finish()
         } else {
-            sweetAlertConf("Discard info?", "Are you sure discard information typed?",
+            sweetAlertConf("Discard info!", "Are you sure discard information you typed?",
                     SweetAlertDialog.WARNING_TYPE, "Exit", "Cancel").setConfirmButton("Exit") {
                 finish()
             }.setCancelButton("Cancel") {

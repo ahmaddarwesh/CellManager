@@ -1,6 +1,7 @@
 package com.cell.bilalcell.bilalcellmanagers
 
 import android.content.Context
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
@@ -14,6 +15,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_pro_by_id.*
+import maes.tech.intentanim.CustomIntent
 
 class ProById : AppCompatActivity() {
     private var db = FirebaseFirestore.getInstance()
@@ -24,7 +26,7 @@ class ProById : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pro_by_id)
         val id = intent.extras.getString("ID")
-
+        var name = intent.extras.getString("nameOfUser")
 
         Docu.document("USER_$id").collection("Products").get()
                 .addOnCompleteListener {
@@ -39,7 +41,7 @@ class ProById : AppCompatActivity() {
                             val time = doc.get("ProductTime")
 
                             MyList.add(products(companyName.toString(), CountPayments.toString(), FirstPayment.toString()
-                                    , ProductName.toString(), ProductPrice.toString(),date.toString(),time.toString()))
+                                    , ProductName.toString(), ProductPrice.toString(), date.toString(), time.toString()))
                         }
 
                         if (MyList.isEmpty()) {
@@ -48,7 +50,7 @@ class ProById : AppCompatActivity() {
                         }
 
                         recycler_pro.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
-                        val adapter = AdapterOfProducts2(this, MyList)
+                        val adapter = AdapterOfProducts2(this, MyList,id,name)
                         recycler_pro.adapter = adapter
 
                     }
@@ -61,7 +63,7 @@ class ProById : AppCompatActivity() {
 
     }
 
-    class AdapterOfProducts2(var conx: Context, var list: ArrayList<products>) : RecyclerView.Adapter<AdapterOfProducts2.MyHolderPro2>() {
+    class AdapterOfProducts2(var conx: Context, var list: ArrayList<products>,var idUser:String,var nameOfUser:String) : RecyclerView.Adapter<AdapterOfProducts2.MyHolderPro2>() {
 
 
         override fun onBindViewHolder(holder: MyHolderPro2, position: Int) {
@@ -70,7 +72,16 @@ class ProById : AppCompatActivity() {
             holder.ComName.text = myL.CompanyName
             holder.date.text = myL.Date
             holder.lay.setOnClickListener {
+                var pos = position
+                conx.startActivity(Intent(conx, ProductInfo::class.java).
+                        putExtra("prod_name", myL.ProductName).
+                        putExtra("com_name", myL.CompanyName).
+                        putExtra("prod_date", myL.Date).
+                        putExtra("IdUser", idUser).
+                        putExtra("IdProd", pos).
+                        putExtra("NameUser", nameOfUser))
 
+                CustomIntent.customType(conx, "up-to-bottom")
             }
         }
 
@@ -88,8 +99,13 @@ class ProById : AppCompatActivity() {
             var NamePro = view.findViewById<TextView>(R.id.tv_name_product)
             var ComName = view.findViewById<TextView>(R.id.tv_company_name)
             var lay = view.findViewById<ConstraintLayout>(R.id.lay_product)
-            var date =view.findViewById<TextView>(R.id.tv_date_product)
+            var date = view.findViewById<TextView>(R.id.tv_date_product)
         }
 
+    }
+
+    override fun finish() {
+        super.finish()
+        CustomIntent.customType(this, "bottom-to-up")
     }
 }

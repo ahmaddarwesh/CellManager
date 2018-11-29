@@ -36,6 +36,7 @@ class ProfileClient : AppCompatActivity() {
 
 
         val id = intent.extras.getString("ID")
+
         val name = intent.extras.getString("Name")
         val number = intent.extras.getString("Number")
 
@@ -90,11 +91,11 @@ class ProfileClient : AppCompatActivity() {
                             val date = doc.get("ProductDate")
                             val time = doc.get("ProductTime")
                             MyList.add(products(companyName.toString(), CountPayments.toString(), FirstPayment.toString()
-                                    , ProductName.toString(), ProductPrice.toString(),date.toString(),time.toString()))
+                                    , ProductName.toString(), ProductPrice.toString(), date.toString(), time.toString()))
                         }
 
                         recy_pro.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
-                        val adapter = AdapterOfProducts(this, MyList)
+                        val adapter = AdapterOfProducts(this, MyList, id,name)
                         recy_pro.adapter = adapter
                     }
 
@@ -230,7 +231,7 @@ class ProfileClient : AppCompatActivity() {
 
     fun saveImage(bmp: Bitmap, id: String) {
         try {
-             val file_path2 = "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)}/CellManager"
+            val file_path2 = "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)}/CellManager"
             val dir = File(file_path2)
             if (!dir.exists())
                 dir.mkdirs()
@@ -238,13 +239,25 @@ class ProfileClient : AppCompatActivity() {
             val fOut = FileOutputStream(file)
 
             bmp.compress(Bitmap.CompressFormat.JPEG, 85, fOut)
-            MediaStore.Images.Media.insertImage(contentResolver, bmp, "USER_$id.jpeg","Cell manager Client");
+            MediaStore.Images.Media.insertImage(contentResolver, bmp, "USER_$id.jpeg", "Cell manager Client");
             fOut.flush()
             fOut.close()
+            sweetAlertDialog("Success saved",
+                    "Image is successfully saved in:\n $dir",
+                    SweetAlertDialog.SUCCESS_TYPE,
+                    "Done").setConfirmButton("Done") {
+                it.dismiss()
+
+            }.show()
             Toast.makeText(this, "Success saved in $dir", Toast.LENGTH_LONG).show()
 
         } catch (e: Exception) {
-            Toast.makeText(this, "Error ${e.message}", Toast.LENGTH_LONG).show()
+            sweetAlertDialog("Not Saved!",
+                    "Image Not Saved Because:\n${e.message}",
+                    SweetAlertDialog.SUCCESS_TYPE,
+                    "Done").setConfirmButton("Done") {
+                it.dismiss()
+            }.show()
         }
 
 
@@ -267,7 +280,7 @@ class ProfileClient : AppCompatActivity() {
         return s
     }
 
-    class AdapterOfProducts(var conx: Context, var list: ArrayList<products>) : RecyclerView.Adapter<AdapterOfProducts.MyHolderPro>() {
+    inner class AdapterOfProducts(var conx: Context, var list: ArrayList<products>, var idUser: String,var name_of_user:String) : RecyclerView.Adapter<AdapterOfProducts.MyHolderPro>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolderPro {
             val myView = LayoutInflater.from(conx).inflate(R.layout.card_list_products, parent, false)
             return MyHolderPro(myView)
@@ -278,12 +291,20 @@ class ProfileClient : AppCompatActivity() {
             holder.NamePro.text = myL.ProductName
             holder.ComName.text = myL.CompanyName
             holder.Date.text = myL.Date
-            holder.lay.setOnClickListener {
-                conx.startActivity(Intent(conx,ProductInfo::class.java).
-                        putExtra("prod_name",myL.ProductName).
-                        putExtra("com_name",myL.CompanyName).
-                        putExtra("prod_date",myL.Date))
 
+            holder.lay.setOnClickListener {
+                val pos = position
+                Toast.makeText(this@ProfileClient,"Y $pos",Toast.LENGTH_LONG).show()
+                val nameOfUser = name_of_user
+
+                conx.startActivity(Intent(conx, ProductInfo::class.java)
+                        .putExtra("prod_name", myL.ProductName)
+                        .putExtra("com_name", myL.CompanyName)
+                        .putExtra("prod_date", myL.Date)
+                        .putExtra("IdUser", idUser)
+                        .putExtra("IdProd",pos)
+                        .putExtra("NameUser",nameOfUser))
+                CustomIntent.customType(conx, "up-to-bottom")
             }
 
         }
@@ -294,7 +315,7 @@ class ProfileClient : AppCompatActivity() {
         }
 
 
-        class MyHolderPro(view: View) : RecyclerView.ViewHolder(view) {
+        inner class MyHolderPro(view: View) : RecyclerView.ViewHolder(view) {
             var NamePro = view.findViewById<TextView>(R.id.tv_name_product)
             var ComName = view.findViewById<TextView>(R.id.tv_company_name)
             var Date = view.findViewById<TextView>(R.id.tv_date_product)

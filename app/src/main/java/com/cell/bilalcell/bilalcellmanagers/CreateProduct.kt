@@ -11,6 +11,7 @@ import android.widget.AdapterView
 import android.widget.Toast
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.auth.User
 import kotlinx.android.synthetic.main.activity_create_product.*
 import maes.tech.intentanim.CustomIntent
 import java.text.DateFormat
@@ -33,6 +34,8 @@ class CreateProduct : AppCompatActivity() {
 
     var name_of_com = "Other"
 
+    var countP = ""
+
     @SuppressLint("SimpleDateFormat")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +43,18 @@ class CreateProduct : AppCompatActivity() {
 
         val id = intent.extras.getString("ID")
         initCompanies()
+
+
+//get Count Product of user
+        Users.document("USER_$id").get()
+                .addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        countP = it.result!!.get("CountProduct").toString()
+                        Toast.makeText(this, "Geted it!", Toast.LENGTH_LONG).show()
+                    } else {
+                        Toast.makeText(this, "ERROR ${it.exception!!.message}", Toast.LENGTH_LONG).show()
+                    }
+                }
 
 
         Adapter = ComAdapter(this, araylist)
@@ -101,14 +116,16 @@ class CreateProduct : AppCompatActivity() {
             Product.put("FirstPayment", FirstPay)
             Product.put("CountPayments", countOfPay)
             Product.put("ProductDate", date)
-            Product.put("ProductTime",t)
+            Product.put("ProductTime", t)
 
-            val time = System.nanoTime()
-
-            Users.document("USER_$id").collection("Products").document("Product_$time").set(Product)
+            Users.document("USER_$id").collection("Products").document("Product_$countP").set(Product)
                     .addOnSuccessListener { it2 ->
                         sweetAlertDialog("Successful", "Done Successfully add Product", SweetAlertDialog.SUCCESS_TYPE,
                                 "Done").setConfirmButton("Done") {
+                            Users.document("USER_$id").update(
+                                    "CountProduct",countP.toInt()+1
+                            )
+                            it.dismiss()
                             finish()
                         }.show()
 
@@ -116,7 +133,7 @@ class CreateProduct : AppCompatActivity() {
                     .addOnFailureListener { it3 ->
                         sweetAlertDialog("Fail", "Error : ${it3.message}", SweetAlertDialog.ERROR_TYPE,
                                 "Ok").setConfirmButton("Ok") {
-
+                            it.dismiss()
                         }.show()
                     }
 

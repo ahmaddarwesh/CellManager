@@ -2,11 +2,11 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:state_pressed="true">
-        <bitmap android:src="@drawable/gallery">
+        <bitmap android:src="@drawable/img_gallery2">
         </bitmap>
     </item>
     <item >
-        <bitmap android:src="@drawable/gallery2">
+        <bitmap android:src="@drawable/img_gallery">
         </bitmap>
     </item>
 </selector>
