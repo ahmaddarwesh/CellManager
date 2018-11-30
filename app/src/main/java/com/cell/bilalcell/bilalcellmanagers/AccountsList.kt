@@ -10,9 +10,12 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.activity_accounts_list.*
 import android.content.Intent
+import android.graphics.Color
+import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Handler
 import android.support.constraint.ConstraintLayout
+import android.support.design.widget.Snackbar
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.MenuItem
@@ -37,10 +40,20 @@ class AccountsList : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_accounts_list)
+
+        if(!isOnline()){
+            val sandbar = Snackbar
+                    .make(con_al, "Check your internet connection", Snackbar.LENGTH_LONG)
+            sandbar.view.setBackgroundColor(Color.RED)
+            sandbar.duration = 1500
+            sandbar.show()
+        }
+
         if (!intent.extras.isEmpty) {
             val type = intent.extras.getInt("type")
             t = type
         }
+
 
         progressBar.visibility = View.VISIBLE
 
@@ -273,5 +286,10 @@ class AccountsList : AppCompatActivity() {
     override fun finish() {
         super.finish()
         CustomIntent.customType(this, "fadein-to-fadeout")
+    }
+    fun isOnline(): Boolean {
+        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val netInfo = cm.activeNetworkInfo
+        return netInfo != null && netInfo.isConnectedOrConnecting
     }
 }

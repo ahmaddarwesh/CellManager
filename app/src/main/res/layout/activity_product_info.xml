@@ -4,8 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/common_google_signin_btn_icon_dark_normal_background"
     android:padding="5dp"
     tools:context=".ProductInfo">
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/add_payment"
+        android:layout_width="57dp"
+        android:layout_height="51dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        app:backgroundTint="@color/main_blue_stroke_color"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_add_white_24dp" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/constraintLayout3"
@@ -28,28 +41,10 @@
             android:padding="2dp"
             android:text="650$"
             android:textAlignment="center"
-            android:textColor="@color/main_green_stroke_color"
+            android:textColor="@color/greenDark"
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/imageView3"
-            app:layout_constraintTop_toBottomOf="@+id/tv_pro_name" />
-
-        <TextView
-            android:id="@+id/tv_pro_client"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="1dp"
-            android:background="@drawable/backg_card"
-            android:fontFamily="sans-serif"
-            android:padding="5dp"
-            android:text="Ahmad Darwesh"
-            android:textAlignment="center"
-            android:textAllCaps="false"
-            android:textColor="@color/Primary2"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/tv_pro_price"
             app:layout_constraintTop_toBottomOf="@+id/tv_pro_name" />
 
         <ImageView
@@ -75,6 +70,22 @@
             app:layout_constraintHorizontal_bias="0.056"
             app:layout_constraintStart_toEndOf="@+id/imageView3"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_pro_client"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:fontFamily="sans-serif"
+            android:padding="3dp"
+            android:text="Ahmad Darwesh"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textColor="@color/main_blue_color"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/tv_pro_price"
+            app:layout_constraintTop_toBottomOf="@+id/tv_pro_name" />
     </android.support.constraint.ConstraintLayout>
 
     <TextView
@@ -101,7 +112,8 @@
         android:layout_marginTop="11dp"
         android:gravity="center"
         android:text="17/5/2018"
-        android:textColor="@color/gray"
+        android:textAllCaps="false"
+        android:textColor="@color/text_color"
         android:textSize="17sp"
         app:layout_constraintStart_toEndOf="@+id/tv_com_name"
         app:layout_constraintTop_toTopOf="parent" />
@@ -124,7 +136,6 @@
         android:layout_height="0dp"
         android:layout_margin="5dp"
         android:layout_marginTop="8dp"
-        android:background="@color/grayLite"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -138,7 +149,7 @@
         android:layout_marginEnd="24dp"
         android:fontFamily="serif"
         android:text="520$"
-        android:textColor="@color/greenDark"
+        android:textColor="@color/main_green_stroke_color"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"

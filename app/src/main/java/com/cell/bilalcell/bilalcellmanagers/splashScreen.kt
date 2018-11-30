@@ -3,6 +3,7 @@ package com.cell.bilalcell.bilalcellmanagers
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.animation.AlphaAnimation
@@ -11,6 +12,9 @@ import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_splash_screen.*
 import android.net.ConnectivityManager
 import com.google.firebase.auth.FirebaseAuth
+import android.support.design.widget.Snackbar
+
+
 
 
 class splashScreen : AppCompatActivity() {
@@ -49,12 +53,16 @@ class splashScreen : AppCompatActivity() {
                         progressBarSplash.progress = i
                         runOnUiThread {
                             when (i) {
-                                50-> {
+                                50 -> {
                                     tv_statuse.text = "Checking Internet Connection.."
                                     if (!isOnline()) {
-                                        Toast.makeText(this@splashScreen, "Offline, Please Check your internet connection", Toast.LENGTH_LONG).show()
+                                        val sandbar = Snackbar
+                                                .make(con_lay, "Check your internet connection", Snackbar.LENGTH_LONG)
+                                        sandbar.view.setBackgroundColor(Color.RED)
+                                        sandbar.duration = 1500
+                                        sandbar.show()
                                     } else {
-                                        Toast.makeText(this@splashScreen, "Online", Toast.LENGTH_LONG).show()
+
                                     }
                                     s = 50
                                 }
@@ -67,7 +75,7 @@ class splashScreen : AppCompatActivity() {
                                     tv_statuse.text = "Finishing.."
                                     s = 300
                                 }
-                                100 ->{
+                                100 -> {
                                     tv_statuse.text = "Done"
                                 }
                             }
@@ -78,7 +86,7 @@ class splashScreen : AppCompatActivity() {
                     if (mAuth!!.currentUser != null) {
                         startActivity(Intent(this@splashScreen, HomeActivity::class.java))
                         finish()
-                    }else{
+                    } else {
                         startActivity(Intent(this@splashScreen, MainActivity::class.java))
                         finish()
                     }

@@ -1,9 +1,13 @@
 package com.cell.bilalcell.bilalcellmanagers
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.net.ConnectivityManager
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 
 import android.view.View
 
@@ -44,6 +48,13 @@ class CreateProduct : AppCompatActivity() {
         val id = intent.extras.getString("ID")
         initCompanies()
 
+        if(!isOnline()){
+            val sandbar = Snackbar
+                    .make(con_cp, "Check your internet connection", Snackbar.LENGTH_LONG)
+            sandbar.view.setBackgroundColor(Color.RED)
+            sandbar.duration = 1500
+            sandbar.show()
+        }
 
 //get Count Product of user
         Users.document("USER_$id").get()
@@ -101,41 +112,60 @@ class CreateProduct : AppCompatActivity() {
 
 
         Done_pro.setOnClickListener { it ->
-            val CompanyName = name_of_com
-            val NameOfPro = name_of_pro.text.toString()
-            val PriceOfPro = "${price_of_pro.text} ${type_of_coin.text}"
-            val FirstPay = "${first_pay.text} ${type_of_coin2.text}"
-            val countOfPay = count_of_pay.text.toString()
-            val date = DateNow()
-            val t = TimeNow()
 
-            val Product = HashMap<String, Any>()
-            Product.put("CompanyName", CompanyName)
-            Product.put("ProductName", NameOfPro)
-            Product.put("ProductPrice", PriceOfPro)
-            Product.put("FirstPayment", FirstPay)
-            Product.put("CountPayments", countOfPay)
-            Product.put("ProductDate", date)
-            Product.put("ProductTime", t)
+            if (name_of_pro.text.trim().isEmpty() || price_of_pro.text.trim().isEmpty() || first_pay.text.trim().isEmpty()) {
+                sweetAlertDialog("Field Required", "You cannot leave field empty. \n Completion info to continue", SweetAlertDialog.ERROR_TYPE,
+                        "Ok").setConfirmButton("Ok") {
+                    it.dismiss()
+                }.show()
+            } else {
 
-            Users.document("USER_$id").collection("Products").document("Product_$countP").set(Product)
-                    .addOnSuccessListener { it2 ->
-                        sweetAlertDialog("Successful", "Done Successfully add Product", SweetAlertDialog.SUCCESS_TYPE,
-                                "Done").setConfirmButton("Done") {
-                            Users.document("USER_$id").update(
-                                    "CountProduct",countP.toInt()+1
-                            )
-                            it.dismiss()
-                            finish()
-                        }.show()
+                val CompanyName = name_of_com
+                val NameOfPro = name_of_pro.text.toString()
+                val PriceOfPro = "${price_of_pro.text} ${type_of_coin.text}"
+                val FirstPay = "${first_pay.text} ${type_of_coin2.text}"
+                val countOfPay = count_of_pay.text.toString() //optional
+                val date = DateNow()
+                val t = TimeNow()
 
-                    }
-                    .addOnFailureListener { it3 ->
-                        sweetAlertDialog("Fail", "Error : ${it3.message}", SweetAlertDialog.ERROR_TYPE,
-                                "Ok").setConfirmButton("Ok") {
-                            it.dismiss()
-                        }.show()
-                    }
+                val Product = HashMap<String, Any>()
+                Product.put("CompanyName", CompanyName)
+                Product.put("ProductName", NameOfPro)
+                Product.put("ProductPrice", PriceOfPro)
+                Product.put("FirstPayment", FirstPay)
+                Product.put("CountPayments", countOfPay)
+                Product.put("ProductDate", date)
+                Product.put("ProductTime", t)
+
+                if(!isOnline()){
+                    sweetAlertDialog("Error",
+                            "Check Your Internet Connection!",
+                            SweetAlertDialog.ERROR_TYPE,
+                            "Ok").setConfirmButton("Ok") {
+                        it.dismiss()
+                    }.show()
+                }else{
+                    Users.document("USER_$id").collection("Products").document("Product_$countP").set(Product)
+                            .addOnSuccessListener { it2 ->
+                                sweetAlertDialog("Successful", "Done Successfully add Product", SweetAlertDialog.SUCCESS_TYPE,
+                                        "Done").setConfirmButton("Done") {
+                                    Users.document("USER_$id").update(
+                                            "CountProduct", countP.toInt() + 1
+                                    )
+                                    it.dismiss()
+                                    finish()
+                                }.show()
+
+                            }
+                            .addOnFailureListener { it3 ->
+                                sweetAlertDialog("Fail", "Error : ${it3.message}", SweetAlertDialog.ERROR_TYPE,
+                                        "Ok").setConfirmButton("Ok") {
+                                    it.dismiss()
+                                }.show()
+                            }
+                }
+
+            }
 
         }
 
@@ -150,7 +180,7 @@ class CreateProduct : AppCompatActivity() {
 
     @SuppressLint("SimpleDateFormat")
     fun TimeNow(): String {
-        val formatter = SimpleDateFormat("HH:mm")
+        val formatter = SimpleDateFormat("hh:mm")
         val date = Date()
         return formatter.format(date)
     }
@@ -189,10 +219,10 @@ class CreateProduct : AppCompatActivity() {
             finish()
         } else {
             sweetAlertConf("Discard info?", "Are you sure discard information typed?",
-                    SweetAlertDialog.WARNING_TYPE, "Exit", "Cancel").setConfirmButton("Exit") {
+                    SweetAlertDialog.WARNING_TYPE, "Cancel", "Discard").setConfirmButton("Cancel") {
+               it.dismiss()
+            }.setCancelButton("Discard") {
                 finish()
-            }.setCancelButton("Cancel") {
-                it.dismiss()
             }.show()
         }
 
@@ -205,6 +235,12 @@ class CreateProduct : AppCompatActivity() {
         s.confirmText = ConfermText
         s.cancelText = cancelText
         return s
+    }
+
+    fun isOnline(): Boolean {
+        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val netInfo = cm.activeNetworkInfo
+        return netInfo != null && netInfo.isConnectedOrConnecting
     }
 
 }

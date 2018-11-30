@@ -56,6 +56,11 @@ class ProductInfo : AppCompatActivity() {
                     }.show()
                 }
 
+        tv_pro_client.setOnClickListener {
+
+
+        }
+
 
     }
 

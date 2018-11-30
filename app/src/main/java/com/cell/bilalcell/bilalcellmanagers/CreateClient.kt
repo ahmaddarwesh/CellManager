@@ -20,8 +20,10 @@ import com.google.firebase.firestore.FirebaseFirestore
 import java.util.*
 
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.Uri
+import android.support.design.widget.Snackbar
 import android.view.View
 import com.google.firebase.storage.FirebaseStorage
 
@@ -43,6 +45,14 @@ class CreateClient : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_client)
+
+        if(!isOnline()){
+            val sandbar = Snackbar
+                    .make(con_cc, "Check your internet connection", Snackbar.LENGTH_LONG)
+            sandbar.view.setBackgroundColor(Color.RED)
+            sandbar.duration = 1500
+            sandbar.show()
+        }
 
 
         Count.addValueEventListener(object : ValueEventListener {
@@ -90,8 +100,8 @@ class CreateClient : AppCompatActivity() {
 
             if (edt_fullname.text.trim().isEmpty() || edt_phonenumber.text.trim().isEmpty()
                     || edt_address.text.trim().isEmpty() || edt_desc.text.trim().isEmpty()) {
-                sweetAlertDialog("Field Empty!",
-                        "Please complete all information of client to continue",
+                sweetAlertDialog("Field Required!",
+                        "You cannot leave field empty.\nCompletion info to continue",
                         SweetAlertDialog.ERROR_TYPE,
                         "Ok").setConfirmButton("Ok") {
                     it.dismiss()
@@ -218,8 +228,9 @@ class CreateClient : AppCompatActivity() {
 
             }
             imgGall.setOnClickListener {
-                val photoPickerIntent = Intent(Intent.ACTION_PICK)
-                photoPickerIntent.type = "image/*"
+                val photoPickerIntent = Intent(Intent.ACTION_PICK,
+                        MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+//                photoPickerIntent.type = "image/*"
                 dialog.dismiss()
                 startActivityForResult(photoPickerIntent, requstGallery)
 
@@ -236,29 +247,39 @@ class CreateClient : AppCompatActivity() {
 
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 
         try {
-            if (requestCode == requst) {
-                if(resultCode == Activity.RESULT_OK){
-                    val bit: Bitmap = data.extras.get("data") as Bitmap
+            if (resultCode != Activity.RESULT_CANCELED) {
+                if (requestCode == requst) {
+
+                    val bit: Bitmap = data!!.extras.get("data") as Bitmap
                     val selectedImage = MediaStore.Images.Media.insertImage(contentResolver, bit, "any", null);
                     urlImage = Uri.parse(selectedImage)
                     profile_info_image.setImageBitmap(bit)
-                }
 
-            } else if (requestCode == requstGallery  ) {
-                if(resultCode == Activity.RESULT_OK){
-                    val selectedImage = data.data
+
+                } else if (requestCode == requstGallery) {
+
+                    val selectedImage = data!!.data
                     urlImage = selectedImage
                     profile_info_image.setImageURI(selectedImage)
-                }
 
-            } else {
-                Toast.makeText(this, "From else", Toast.LENGTH_LONG).show()
-                val selectedImage = data.data
-                urlImage = selectedImage
+
+                } else {
+                    Toast.makeText(this, "From else", Toast.LENGTH_LONG).show()
+                    val selectedImage = data!!.data
+                    urlImage = selectedImage
+                }
+            }else{
+                sweetAlertDialog("No Selected!",
+                        "No image Selected Please Select to continue!",
+                        SweetAlertDialog.ERROR_TYPE,
+                        "Ok").setConfirmButton("Ok") {
+                    it.dismiss()
+                }.show()
             }
+
 
         } catch (e: Exception) {
             sweetAlertDialog("Error",
@@ -326,10 +347,10 @@ class CreateClient : AppCompatActivity() {
             finish()
         } else {
             sweetAlertConf("Discard info!", "Are you sure discard information you typed?",
-                    SweetAlertDialog.WARNING_TYPE, "Exit", "Cancel").setConfirmButton("Exit") {
-                finish()
-            }.setCancelButton("Cancel") {
+                    SweetAlertDialog.WARNING_TYPE, "Cancel", "Discard").setConfirmButton("Cancel") {
                 it.dismiss()
+            }.setCancelButton("Discard") {
+                finish()
             }.show()
         }
 
