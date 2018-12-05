@@ -214,7 +214,7 @@ class AccountsList : AppCompatActivity() {
                                         UsersD.document("USER_${list.id}")
                                                 .delete()
                                                 .addOnSuccessListener { it ->
-                                                    sweetAlertDialog("Deleted",
+                                                    SweetAlert().sweetAlertDialog(context,"Deleted",
                                                             "The Client Successfully Deleted!",
                                                             SweetAlertDialog.SUCCESS_TYPE,
                                                             "Done").setConfirmButton("Done") {
@@ -224,7 +224,7 @@ class AccountsList : AppCompatActivity() {
                                                     }.show()
                                                 }
                                                 .addOnFailureListener { it3 ->
-                                                    sweetAlertDialog("Not Deleted",
+                                                    SweetAlert().sweetAlertDialog(context,"Not Deleted",
                                                             "The Client is not Deleted because:\n${it3.message}",
                                                             SweetAlertDialog.SUCCESS_TYPE,
                                                             "Done").setConfirmButton("Done") {

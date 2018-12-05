@@ -103,7 +103,7 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
 
-        sweetAlertConf("Close Management", "Are you sure close the Management really?",
+        SweetAlert().sweetAlertConf(this,"Close Management", "Are you sure close the Management really?",
                 SweetAlertDialog.WARNING_TYPE, "Cancel", "Exit").setConfirmButton("Cancel") {
             it.dismiss()
         }.setCancelButton("Exit") {
@@ -112,12 +112,4 @@ class HomeActivity : AppCompatActivity() {
         }.show()
     }
 
-    private fun sweetAlertConf(Title: String, Content: String, Type: Int, ConfermText: String, cancelText: String): SweetAlertDialog {
-        val s = SweetAlertDialog(this, Type)
-        s.titleText = Title
-        s.contentText = Content
-        s.confirmText = ConfermText
-        s.cancelText = cancelText
-        return s
-    }
 }

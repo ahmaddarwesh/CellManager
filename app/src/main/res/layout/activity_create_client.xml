@@ -66,7 +66,7 @@
         app:layout_constraintTop_toBottomOf="@+id/edt_phonenumber" />
 
     <EditText
-        android:id="@+id/edt_desc"
+        android:id="@+id/desc"
         android:layout_width="0dp"
         android:layout_height="153dp"
         android:layout_marginStart="16dp"
@@ -120,7 +120,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.477"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edt_desc"
+        app:layout_constraintTop_toBottomOf="@+id/desc"
         app:layout_constraintVertical_bias="1.0">
 
         <ImageView
@@ -149,7 +149,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.409"
             app:layout_constraintStart_toEndOf="@+id/imgSuccess"
-            app:layout_constraintTop_toBottomOf="@+id/edt_desc"
+            app:layout_constraintTop_toBottomOf="@+id/desc"
             app:srcCompat="@drawable/img_eyes" />
     </LinearLayout>
 
@@ -165,7 +165,7 @@
         app:civ_border_width="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edt_desc"
+        app:layout_constraintTop_toBottomOf="@+id/desc"
         tools:ignore="MissingConstraints"
         tools:src="@drawable/add_pic" />
 

@@ -131,13 +131,13 @@ class ProfileClient : AppCompatActivity() {
                 val addPayment = dialog.findViewById<ImageView>(R.id.img_camera)
                 val addProduct = dialog.findViewById<ImageView>(R.id.img_gallery)
 
-                addPayment.setOnClickListener(object : View.OnClickListener {
-                    override fun onClick(v: View?) {
-                        Toast.makeText(this@ProfileClient, "Add Payment", Toast.LENGTH_LONG).show()
-                        dialog.dismiss()
-                    }
-
-                })
+                addPayment.setOnClickListener {
+                    startActivity(Intent(this@ProfileClient,ProById::class.java)
+                            .putExtra("ID",id)
+                            .putExtra("nameOfUser",name))
+                    CustomIntent.customType(this, "up-to-bottom")
+                    dialog.dismiss()
+                }
 
                 addProduct.setOnClickListener(object : View.OnClickListener {
                     override fun onClick(v: View?) {
@@ -167,14 +167,14 @@ class ProfileClient : AppCompatActivity() {
                             Toast.makeText(this@ProfileClient, "Edit", Toast.LENGTH_LONG).show()
                         }
                         R.id.delete_user -> {
-                            sweetAlertConf("Are you sure?", "Are you sure you want to delete this client?",
+                            SweetAlert().sweetAlertConf(this@ProfileClient,"Are you sure?", "Are you sure you want to delete this client?",
                                     SweetAlertDialog.WARNING_TYPE,
                                     "Yes", "No").setConfirmButton("Yes") { it2 ->
                                 it2.dismiss()
                                 Docu.document("USER_$id")
                                         .delete()
                                         .addOnSuccessListener { it1 ->
-                                            sweetAlertDialog("Deleted",
+                                            SweetAlert().sweetAlertDialog(this@ProfileClient,"Deleted",
                                                     "The Client Successfully Deleted!",
                                                     SweetAlertDialog.SUCCESS_TYPE,
                                                     "Done").setConfirmButton("Done") {
@@ -185,7 +185,7 @@ class ProfileClient : AppCompatActivity() {
                                         }
 
                                         .addOnFailureListener { it ->
-                                            sweetAlertDialog("Not Deleted",
+                                            SweetAlert().sweetAlertDialog(this@ProfileClient,"Not Deleted",
                                                     "The Client is not Deleted because:\n${it.message}",
                                                     SweetAlertDialog.SUCCESS_TYPE,
                                                     "Done").setConfirmButton("Done") {
@@ -242,7 +242,7 @@ class ProfileClient : AppCompatActivity() {
             MediaStore.Images.Media.insertImage(contentResolver, bmp, "USER_$id.jpeg", "Cell manager Client");
             fOut.flush()
             fOut.close()
-            sweetAlertDialog("Success saved",
+            SweetAlert().sweetAlertDialog(this,"Success saved",
                     "Image is successfully saved in:\n $dir",
                     SweetAlertDialog.SUCCESS_TYPE,
                     "Done").setConfirmButton("Done") {
@@ -252,7 +252,7 @@ class ProfileClient : AppCompatActivity() {
             Toast.makeText(this, "Success saved in $dir", Toast.LENGTH_LONG).show()
 
         } catch (e: Exception) {
-            sweetAlertDialog("Not Saved!",
+            SweetAlert().sweetAlertDialog(this,"Not Saved!",
                     "Image Not Saved Because:\n${e.message}",
                     SweetAlertDialog.SUCCESS_TYPE,
                     "Done").setConfirmButton("Done") {
@@ -261,23 +261,6 @@ class ProfileClient : AppCompatActivity() {
         }
 
 
-    }
-
-    private fun sweetAlertDialog(Title: String, Content: String, Type: Int, ConfermText: String): SweetAlertDialog {
-        val s = SweetAlertDialog(this, Type)
-        s.titleText = Title
-        s.contentText = Content
-        s.confirmText = ConfermText
-        return s
-    }
-
-    private fun sweetAlertConf(Title: String, Content: String, Type: Int, ConfermText: String, cancelText: String): SweetAlertDialog {
-        val s = SweetAlertDialog(this, Type)
-        s.titleText = Title
-        s.contentText = Content
-        s.confirmText = ConfermText
-        s.cancelText = cancelText
-        return s
     }
 
     inner class AdapterOfProducts(var conx: Context, var list: ArrayList<products>, var idUser: String,var name_of_user:String) : RecyclerView.Adapter<AdapterOfProducts.MyHolderPro>() {
@@ -293,7 +276,7 @@ class ProfileClient : AppCompatActivity() {
             holder.Date.text = myL.Date
 
             holder.lay.setOnClickListener {
-                val pos = position
+                val pos = position +1
                 Toast.makeText(this@ProfileClient,"Y $pos",Toast.LENGTH_LONG).show()
                 val nameOfUser = name_of_user
 

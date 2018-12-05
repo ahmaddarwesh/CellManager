@@ -49,7 +49,7 @@
                 android:id="@+id/Num_c"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
+                android:layout_marginStart="16dp"
                 android:text="71085998"
                 android:textColor="@color/main_disabled_color"
                 android:textSize="17sp"

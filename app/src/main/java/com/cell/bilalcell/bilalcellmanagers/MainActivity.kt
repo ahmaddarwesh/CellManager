@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
 
 
         if(edt_username.text.isEmpty() || edt_password.text.isEmpty()){
-            sweetAlertDialog("Field Empty!",
+            SweetAlert().sweetAlertDialog(this,"Field Empty!",
                     "Do not leave any field empty to continue!!",
                     SweetAlertDialog.ERROR_TYPE,
                     "Ok").setConfirmButton("Ok") {
@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() {
             val email = edt_username.text.toString()
             val password = edt_password.text.toString()
             if (!isOnline()) {
-                sweetAlertDialog("Error",
+                SweetAlert().sweetAlertDialog(this,"Error",
                         "Please Check your Internet Connection!",
                         SweetAlertDialog.ERROR_TYPE,
                         "Ok").setConfirmButton("Ok") {
@@ -70,6 +70,12 @@ class MainActivity : AppCompatActivity() {
                                 // If sign in fails, display a message to the user.
                                 Toast.makeText(this@MainActivity, "Authentication failed.",
                                         Toast.LENGTH_SHORT).show()
+                                SweetAlert().sweetAlertDialog(this,"Authentication failed",
+                                        "Please check Email or Password and try again.",
+                                        SweetAlertDialog.ERROR_TYPE,
+                                        "Ok").setConfirmButton("Ok") {
+                                    it.dismiss()
+                                }.show()
                             }
 
                         }
@@ -84,15 +90,6 @@ class MainActivity : AppCompatActivity() {
         val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val netInfo = cm.activeNetworkInfo
         return netInfo != null && netInfo.isConnectedOrConnecting
-    }
-
-    private fun sweetAlertDialog(Title: String, Content: String, Type: Int, ConfermText: String): SweetAlertDialog {
-        val s = SweetAlertDialog(this, Type)
-        s.titleText = Title
-        s.contentText = Content
-        s.confirmText = ConfermText
-
-        return s
     }
 
 }

@@ -62,7 +62,7 @@ class CreateClient : AppCompatActivity() {
             }
 
             override fun onCancelled(p0: DatabaseError) {
-                sweetAlertDialog("Error",
+                SweetAlert().sweetAlertDialog(this@CreateClient,"Error",
                         p0.message,
                         SweetAlertDialog.ERROR_TYPE,
                         "Ok").setConfirmButton("Ok") {
@@ -82,11 +82,11 @@ class CreateClient : AppCompatActivity() {
                 val name = edt_fullname.text.toString()
                 val phone = edt_phonenumber.text.toString()
                 val address = edt_address.text.toString()
-                val desc = edt_desc.text.toString()
+                val desc = desc.text.toString()
                 val Info = " ID : $id \n NAME : $name\n PHONE NUMBER : $phone\n ADDRESS : $address\n\n DESCRIPTION :\n $desc"
                 DialogPreview(Info)
             } catch (e: Exception) {
-                sweetAlertDialog("Error",
+                SweetAlert().sweetAlertDialog(this,"Error",
                         "${e.message}",
                         SweetAlertDialog.ERROR_TYPE,
                         "Ok").setConfirmButton("Ok") {
@@ -99,8 +99,8 @@ class CreateClient : AppCompatActivity() {
         imgSuccess.setOnClickListener { it ->
 
             if (edt_fullname.text.trim().isEmpty() || edt_phonenumber.text.trim().isEmpty()
-                    || edt_address.text.trim().isEmpty() || edt_desc.text.trim().isEmpty()) {
-                sweetAlertDialog("Field Required!",
+                    || edt_address.text.trim().isEmpty() || desc.text.trim().isEmpty()) {
+                SweetAlert().sweetAlertDialog(this,"Field Required!",
                         "You cannot leave field empty.\nCompletion info to continue",
                         SweetAlertDialog.ERROR_TYPE,
                         "Ok").setConfirmButton("Ok") {
@@ -115,7 +115,7 @@ class CreateClient : AppCompatActivity() {
                 val name = edt_fullname.text.toString()
                 val phone = edt_phonenumber.text.toString()
                 val address = edt_address.text.toString()
-                val desc = edt_desc.text.toString()
+                val desc = desc.text.toString()
                 val User = HashMap<String, Any>()
                 User.put("ID", id)
                 User.put("Name", name)
@@ -128,7 +128,7 @@ class CreateClient : AppCompatActivity() {
                 if (!isOnline()) {
                     progressBarLoading.visibility = View.GONE
                     linearLayoutS.visibility = View.VISIBLE
-                    sweetAlertDialog("Error",
+                    SweetAlert().sweetAlertDialog(this,"Error",
                             "Check Your Internet Connection!",
                             SweetAlertDialog.ERROR_TYPE,
                             "Ok").setConfirmButton("Ok") {
@@ -144,7 +144,7 @@ class CreateClient : AppCompatActivity() {
                                 Cookies().SaveInt(this, "ID", id1)
                                 Count.setValue(id1)
 
-                                sweetAlertDialog("Success",
+                                SweetAlert().sweetAlertDialog(this,"Success",
                                         "Successfully added client",
                                         SweetAlertDialog.SUCCESS_TYPE,
                                         "Done").setConfirmButton("Done") {
@@ -157,7 +157,7 @@ class CreateClient : AppCompatActivity() {
 
                             }
                             .addOnFailureListener { it1 ->
-                                sweetAlertDialog("Error",
+                                SweetAlert().sweetAlertDialog(this,"Error",
                                         "${it1.message}",
                                         SweetAlertDialog.ERROR_TYPE,
                                         "Ok").setConfirmButton("Ok") {
@@ -173,25 +173,6 @@ class CreateClient : AppCompatActivity() {
 
         }
 
-    }
-
-
-    private fun sweetAlertDialog(Title: String, Content: String, Type: Int, ConfermText: String): SweetAlertDialog {
-        val s = SweetAlertDialog(this, Type)
-        s.titleText = Title
-        s.contentText = Content
-        s.confirmText = ConfermText
-
-        return s
-    }
-
-    private fun sweetAlertConf(Title: String, Content: String, Type: Int, ConfermText: String, cancelText: String): SweetAlertDialog {
-        val s = SweetAlertDialog(this, Type)
-        s.titleText = Title
-        s.contentText = Content
-        s.confirmText = ConfermText
-        s.cancelText = cancelText
-        return s
     }
 
     fun DialogPreview(MyText: String) {
@@ -237,7 +218,7 @@ class CreateClient : AppCompatActivity() {
             }
             dialog.show()
         } catch (E: Exception) {
-            sweetAlertDialog("Error",
+            SweetAlert().sweetAlertDialog(this,"Error",
                     "${E.message}",
                     SweetAlertDialog.ERROR_TYPE,
                     "Ok").setConfirmButton("Ok") {
@@ -272,7 +253,7 @@ class CreateClient : AppCompatActivity() {
                     urlImage = selectedImage
                 }
             }else{
-                sweetAlertDialog("No Selected!",
+                SweetAlert().sweetAlertDialog(this,"No Selected!",
                         "No image Selected Please Select to continue!",
                         SweetAlertDialog.ERROR_TYPE,
                         "Ok").setConfirmButton("Ok") {
@@ -282,7 +263,7 @@ class CreateClient : AppCompatActivity() {
 
 
         } catch (e: Exception) {
-            sweetAlertDialog("Error",
+            SweetAlert().sweetAlertDialog(this,"Error",
                     "No image Selected ${e.message}",
                     SweetAlertDialog.ERROR_TYPE,
                     "Ok").setConfirmButton("Ok") {
@@ -315,7 +296,7 @@ class CreateClient : AppCompatActivity() {
                     val downloadUri = task.result!!
                     Users.document("USER_$id").update("img_url", downloadUri.toString())
                 } else {
-                    sweetAlertDialog("Error",
+                    SweetAlert().sweetAlertDialog(this,"Error",
                             "Image not Uploaded",
                             SweetAlertDialog.ERROR_TYPE,
                             "Ok").setConfirmButton("Ok") {
@@ -325,7 +306,7 @@ class CreateClient : AppCompatActivity() {
             }
 
         } catch (E: Exception) {
-            sweetAlertDialog("Error",
+            SweetAlert().sweetAlertDialog(this,"Error",
                     "${E.message}",
                     SweetAlertDialog.ERROR_TYPE,
                     "Ok").setConfirmButton("Ok") {
@@ -343,10 +324,10 @@ class CreateClient : AppCompatActivity() {
 
     override fun onBackPressed() {
         if (edt_fullname.text.trim().isEmpty() && edt_phonenumber.text.trim().isEmpty()
-                && edt_address.text.trim().isEmpty() && edt_desc.text.trim().isEmpty()) {
+                && edt_address.text.trim().isEmpty() && desc.text.trim().isEmpty()) {
             finish()
         } else {
-            sweetAlertConf("Discard info!", "Are you sure discard information you typed?",
+            SweetAlert().sweetAlertConf(this,"Discard info!", "Are you sure discard information you typed?",
                     SweetAlertDialog.WARNING_TYPE, "Cancel", "Discard").setConfirmButton("Cancel") {
                 it.dismiss()
             }.setCancelButton("Discard") {

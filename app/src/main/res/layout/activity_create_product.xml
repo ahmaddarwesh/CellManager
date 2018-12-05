@@ -22,7 +22,7 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/lay_info_product"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="361dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="8dp"
@@ -34,19 +34,6 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinner">
-
-        <TextView
-            android:id="@+id/textView14"
-            android:layout_width="wrap_content"
-            android:layout_height="16dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:text="Count Payment"
-            android:textColor="@color/main_blue_color"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toTopOf="@+id/count_of_pay"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/textView13"
@@ -129,31 +116,12 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/price_of_pro" />
 
-        <EditText
-            android:id="@+id/count_of_pay"
-            android:layout_width="165dp"
-            android:layout_height="47dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/backg_textfield"
-            android:ems="10"
-            android:hint="Count (Optional)"
-            android:inputType="textPersonName|number"
-            android:paddingLeft="5dp"
-            android:textAlignment="center"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.502"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/first_pay" />
-
         <Button
             android:id="@+id/Done_pro"
-            android:layout_width="92dp"
+            android:layout_width="0dp"
             android:layout_height="40dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
             android:background="@drawable/backg_btn"
             android:text="Done"
             android:textColor="@color/button_text_color"
@@ -161,8 +129,7 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/count_of_pay"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/type_of_coin"
@@ -220,18 +187,6 @@
             android:textSize="12sp"
             app:layout_constraintBottom_toTopOf="@+id/first_pay"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <TextView
-            android:id="@+id/help"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginBottom="16dp"
-            android:text="Need Help?"
-            android:textColor="@color/main_blue_color"
-            android:textSize="15sp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
     </android.support.constraint.ConstraintLayout>

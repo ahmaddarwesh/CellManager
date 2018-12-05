@@ -38,7 +38,7 @@ class CreateProduct : AppCompatActivity() {
 
     var name_of_com = "Other"
 
-    var countP = ""
+    var countP :Long= 0
 
     @SuppressLint("SimpleDateFormat")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,7 +60,7 @@ class CreateProduct : AppCompatActivity() {
         Users.document("USER_$id").get()
                 .addOnCompleteListener {
                     if (it.isSuccessful) {
-                        countP = it.result!!.get("CountProduct").toString()
+                        countP = it.result!!.getLong("CountProduct")!!.toLong() + 1
                         Toast.makeText(this, "Geted it!", Toast.LENGTH_LONG).show()
                     } else {
                         Toast.makeText(this, "ERROR ${it.exception!!.message}", Toast.LENGTH_LONG).show()
@@ -112,9 +112,12 @@ class CreateProduct : AppCompatActivity() {
 
 
         Done_pro.setOnClickListener { it ->
+            val Products = db.collection("Users")
+                    .document("USER_$id")
+                    .collection("Products")
 
             if (name_of_pro.text.trim().isEmpty() || price_of_pro.text.trim().isEmpty() || first_pay.text.trim().isEmpty()) {
-                sweetAlertDialog("Field Required", "You cannot leave field empty. \n Completion info to continue", SweetAlertDialog.ERROR_TYPE,
+                SweetAlert().sweetAlertDialog(this,"Field Required", "You cannot leave field empty. \n Completion info to continue", SweetAlertDialog.ERROR_TYPE,
                         "Ok").setConfirmButton("Ok") {
                     it.dismiss()
                 }.show()
@@ -124,21 +127,25 @@ class CreateProduct : AppCompatActivity() {
                 val NameOfPro = name_of_pro.text.toString()
                 val PriceOfPro = "${price_of_pro.text} ${type_of_coin.text}"
                 val FirstPay = "${first_pay.text} ${type_of_coin2.text}"
-                val countOfPay = count_of_pay.text.toString() //optional
+
                 val date = DateNow()
                 val t = TimeNow()
-
                 val Product = HashMap<String, Any>()
                 Product.put("CompanyName", CompanyName)
                 Product.put("ProductName", NameOfPro)
                 Product.put("ProductPrice", PriceOfPro)
-                Product.put("FirstPayment", FirstPay)
-                Product.put("CountPayments", countOfPay)
                 Product.put("ProductDate", date)
+                Product.put("CountPayments",1)
                 Product.put("ProductTime", t)
 
+                val payment = HashMap<String, Any>()
+                payment.put("PayCash", FirstPay)
+                payment.put("PayDescription", "First Payment")
+                payment.put("PaymentDate", DateNow())
+                payment.put("PaymentTime", TimeNow())
+
                 if(!isOnline()){
-                    sweetAlertDialog("Error",
+                    SweetAlert().sweetAlertDialog(this,"Error",
                             "Check Your Internet Connection!",
                             SweetAlertDialog.ERROR_TYPE,
                             "Ok").setConfirmButton("Ok") {
@@ -147,10 +154,14 @@ class CreateProduct : AppCompatActivity() {
                 }else{
                     Users.document("USER_$id").collection("Products").document("Product_$countP").set(Product)
                             .addOnSuccessListener { it2 ->
-                                sweetAlertDialog("Successful", "Done Successfully add Product", SweetAlertDialog.SUCCESS_TYPE,
+                                Products.document("Product_$countP")
+                                        .collection("Payments")
+                                        .document("Payment_1")
+                                        .set(payment)
+                                SweetAlert().sweetAlertDialog(this,"Successful", "Done Successfully add Product", SweetAlertDialog.SUCCESS_TYPE,
                                         "Done").setConfirmButton("Done") {
                                     Users.document("USER_$id").update(
-                                            "CountProduct", countP.toInt() + 1
+                                            "CountProduct", countP
                                     )
                                     it.dismiss()
                                     finish()
@@ -158,7 +169,7 @@ class CreateProduct : AppCompatActivity() {
 
                             }
                             .addOnFailureListener { it3 ->
-                                sweetAlertDialog("Fail", "Error : ${it3.message}", SweetAlertDialog.ERROR_TYPE,
+                                SweetAlert().sweetAlertDialog(this,"Fail", "Error : ${it3.message}", SweetAlertDialog.ERROR_TYPE,
                                         "Ok").setConfirmButton("Ok") {
                                     it.dismiss()
                                 }.show()
@@ -204,21 +215,14 @@ class CreateProduct : AppCompatActivity() {
         CustomIntent.customType(this, "fadein-to-fadeout")
     }
 
-    private fun sweetAlertDialog(Title: String, Content: String, Type: Int, ConfermText: String): SweetAlertDialog {
-        val s = SweetAlertDialog(this, Type)
-        s.titleText = Title
-        s.contentText = Content
-        s.confirmText = ConfermText
 
-        return s
-    }
 
     override fun onBackPressed() {
         if (name_of_pro.text.isEmpty() && price_of_pro.text.isEmpty()
-                && first_pay.text.isEmpty() && count_of_pay.text.isEmpty()) {
+                && first_pay.text.isEmpty() ) {
             finish()
         } else {
-            sweetAlertConf("Discard info?", "Are you sure discard information typed?",
+            SweetAlert().sweetAlertConf(this,"Discard info?", "Are you sure discard information typed?",
                     SweetAlertDialog.WARNING_TYPE, "Cancel", "Discard").setConfirmButton("Cancel") {
                it.dismiss()
             }.setCancelButton("Discard") {
@@ -228,14 +232,6 @@ class CreateProduct : AppCompatActivity() {
 
     }
 
-    private fun sweetAlertConf(Title: String, Content: String, Type: Int, ConfermText: String, cancelText: String): SweetAlertDialog {
-        val s = SweetAlertDialog(this, Type)
-        s.titleText = Title
-        s.contentText = Content
-        s.confirmText = ConfermText
-        s.cancelText = cancelText
-        return s
-    }
 
     fun isOnline(): Boolean {
         val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
