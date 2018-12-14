@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/common_google_signin_btn_icon_dark_normal_background"
-    android:padding="5dp"
+    android:background="@drawable/backg_card"
+    android:padding="2dp"
     tools:context=".ProductInfo">
 
     <android.support.design.widget.FloatingActionButton
@@ -24,7 +24,8 @@
         android:id="@+id/constraintLayout3"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="2dp"
+        android:layout_marginTop="2dp"
+        android:background="@drawable/common_google_signin_btn_icon_light_normal_background"
         app:layout_constraintBottom_toTopOf="@+id/recy_payment"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -147,7 +148,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="5dp"
-        android:layout_marginTop="8dp"
+        android:background="@drawable/blue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -173,7 +174,7 @@
         android:layout_height="1dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:background="@color/gray_btn_bg_color"
+        android:background="@color/gray"
         app:layout_constraintBottom_toTopOf="@+id/tv_pro_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

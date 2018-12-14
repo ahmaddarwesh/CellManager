@@ -5,7 +5,9 @@ import android.app.Dialog
 import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
@@ -16,6 +18,7 @@ import kotlinx.android.synthetic.main.activity_product_info.*
 import maes.tech.intentanim.CustomIntent
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class ProductInfo : AppCompatActivity() {
@@ -23,7 +26,7 @@ class ProductInfo : AppCompatActivity() {
 
     private var db = FirebaseFirestore.getInstance()
     private var docs = db.collection("Users")
-
+    private var listPay = ArrayList<Payment>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,8 +63,28 @@ class ProductInfo : AppCompatActivity() {
                     }.show()
                 }
 
-        tv_pro_client.setOnClickListener {
 
+        docs.document("USER_$idUser").collection("Products").document("Product_$IdProd").collection("Payments").get().addOnCompleteListener {
+            if (it.isSuccessful) {
+                for (Pay in it.result!!) {
+                    val cash = Pay.get("PayCash").toString()
+                    val desc = Pay.get("PayDescription").toString()
+                    val date = Pay.get("PaymentDate").toString()
+                    val time = Pay.get("PaymentTime").toString()
+                    listPay.add(Payment(cash, desc, date, time))
+                }
+                recy_payment.layoutManager = LinearLayoutManager(this,LinearLayout.VERTICAL,false)
+                recy_payment.adapter = AdapterPayments(this,listPay)
+                count.text = listPay.size.toString()
+            } else {
+                Toast.makeText(this,"Error Else \n${it.result}",Toast.LENGTH_LONG).show()
+            }
+        }.addOnFailureListener {
+            Toast.makeText(this,"Error Failur \n${it.message}",Toast.LENGTH_LONG).show()
+        }
+
+
+        tv_pro_client.setOnClickListener {
 
         }
 
@@ -72,6 +95,28 @@ class ProductInfo : AppCompatActivity() {
 
     }
 
+    fun getPayments(idUser:String,IdProd:String){
+        listPay.clear()
+        docs.document("USER_$idUser").collection("Products").document("Product_$IdProd").collection("Payments").get().addOnCompleteListener {
+            if (it.isSuccessful) {
+                for (Pay in it.result!!) {
+                    val cash = Pay.get("PayCash").toString()
+                    val desc = Pay.get("PayDescription").toString()
+                    val date = Pay.get("PaymentDate").toString()
+                    val time = Pay.get("PaymentTime").toString()
+                    listPay.add(Payment(cash, desc, date, time))
+                }
+                recy_payment.layoutManager = LinearLayoutManager(this,LinearLayout.VERTICAL,false)
+                recy_payment.adapter = AdapterPayments(this,listPay)
+                count.text = listPay.size.toString()
+            } else {
+                Toast.makeText(this,"Error Else \n${it.result}",Toast.LENGTH_LONG).show()
+            }
+        }.addOnFailureListener {
+            Toast.makeText(this,"Error Failur \n${it.message}",Toast.LENGTH_LONG).show()
+        }
+
+    }
 
     @SuppressLint("SimpleDateFormat")
     fun DateNow(): String {
@@ -87,7 +132,7 @@ class ProductInfo : AppCompatActivity() {
         return formatter.format(date)
     }
 
-    fun DialogAddPay(name: String, pos: Int, idUser: String) {
+    fun DialogAddPay(name: String, pos: Int, idUser: String ) {
         var typeC1 = 0
         val Products = db.collection("Users")
                 .document("USER_$idUser")
@@ -103,7 +148,7 @@ class ProductInfo : AppCompatActivity() {
 
         val cash = dialog.findViewById<EditText>(R.id.cash)
         val description = dialog.findViewById<EditText>(R.id.desc)
-        val addBtn = dialog.findViewById<Button>(R.id.add_btn)
+        val addBtn = dialog.findViewById<ImageView>(R.id.add_btn)
         val edit_product = dialog.findViewById<TextView>(R.id.edit_product)
         val text_type = dialog.findViewById<TextView>(R.id.text_type)
         val img_cancel = dialog.findViewById<ImageView>(R.id.img_cancel)
@@ -118,6 +163,7 @@ class ProductInfo : AppCompatActivity() {
                 SweetAlert().sweetAlertConf(this, "Discard info!", "Are you sure discard information you typed?",
                         SweetAlertDialog.WARNING_TYPE, "Cancel", "Discard").setConfirmButton("Cancel") {
                     it.dismiss()
+
                 }.setCancelButton("Discard") {
                     it.dismiss()
                     dialog.dismiss()
@@ -167,6 +213,7 @@ class ProductInfo : AppCompatActivity() {
                             SweetAlert().sweetAlertDialog(this, "Added Successfully", "Success the add payment to $name Phone", SweetAlertDialog.SUCCESS_TYPE,
                                     "Ok").setConfirmButton("Ok") {
                                 it.dismiss()
+                                getPayments(idUser,pos.toString())
                             }.show()
                         }
                         .addOnFailureListener {
@@ -190,22 +237,32 @@ class ProductInfo : AppCompatActivity() {
     }
 
 
-    class AdapterPayments(var conx: Context, var list: ArrayList<String>) : RecyclerView.Adapter<AdapterPayments.MyHolder>() {
-
+    class AdapterPayments(var conx: Context, var list: ArrayList<Payment>) : RecyclerView.Adapter<AdapterPayments.MyHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdapterPayments.MyHolder {
-            return MyHolder(parent)
+            var myView = LayoutInflater.from(conx).inflate(R.layout.card_payment,parent,false)
+            return MyHolder(myView)
         }
 
         override fun getItemCount(): Int {
-            return 1
+            return list.size
         }
 
         override fun onBindViewHolder(holder: AdapterPayments.MyHolder, position: Int) {
+
+            val list = list[position]
+            holder.cash.text = list.cash
+            holder.desc.text = list.desc
+            holder.date.text = list.date
+            holder.time.text = list.time
+
         }
 
         class MyHolder(view: View) : RecyclerView.ViewHolder(view) {
-
+            var cash = view.findViewById<TextView>(R.id.Cash_Pay)
+            var desc = view.findViewById<TextView>(R.id.Desc_Pay)
+            var date = view.findViewById<TextView>(R.id.Date_Pay)
+            var time = view.findViewById<TextView>(R.id.Time_Pay)
         }
     }
 

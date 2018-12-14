@@ -1,6 +1,7 @@
 package com.cell.bilalcell.bilalcellmanagers
 
 import android.app.Dialog
+import android.app.PendingIntent.getActivity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -35,6 +36,7 @@ class ProfileClient : AppCompatActivity() {
         setContentView(R.layout.activity_profile_client)
 
 
+
         val id = intent.extras.getString("ID")
 
         val name = intent.extras.getString("Name")
@@ -44,6 +46,7 @@ class ProfileClient : AppCompatActivity() {
         tv_number.text = number
 
         Picasso.get().load(R.drawable.loading_profile).into(profile_info_image)
+
 
         val user_info = Docu.document("USER_$id")
         user_info.get().addOnCompleteListener {
@@ -69,8 +72,7 @@ class ProfileClient : AppCompatActivity() {
                             }
 
                             override fun onError(e: java.lang.Exception?) {
-                                Toast.makeText(this@ProfileClient, "Erroring ${e!!.message}", Toast.LENGTH_LONG).show()
-                                Picasso.get().load(R.drawable.loading_profile).into(profile_info_image)
+                                 Picasso.get().load(R.drawable.loading_profile).into(profile_info_image)
                             }
 
                         })
@@ -97,6 +99,9 @@ class ProfileClient : AppCompatActivity() {
                         recy_pro.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
                         val adapter = AdapterOfProducts(this, MyList, id,name)
                         recy_pro.adapter = adapter
+                        if(!MyList.isEmpty()){
+                            recy_pro.visibility = View.VISIBLE
+                        }
                     }
 
                 }
@@ -117,6 +122,14 @@ class ProfileClient : AppCompatActivity() {
             startActivity(sms_intent)
         }
 
+
+        tv_name.setOnClickListener {
+            val mIntent = intent
+            finish()
+            startActivity(mIntent)
+
+        }
+
         take_pic.setOnClickListener {
             saveImage(TakeNow(linearLayout3), id)
         }
@@ -132,19 +145,20 @@ class ProfileClient : AppCompatActivity() {
                 val addProduct = dialog.findViewById<ImageView>(R.id.img_gallery)
 
                 addPayment.setOnClickListener {
+                    dialog.dismiss()
                     startActivity(Intent(this@ProfileClient,ProById::class.java)
                             .putExtra("ID",id)
                             .putExtra("nameOfUser",name))
                     CustomIntent.customType(this, "up-to-bottom")
-                    dialog.dismiss()
+
                 }
 
                 addProduct.setOnClickListener(object : View.OnClickListener {
                     override fun onClick(v: View?) {
-                        Toast.makeText(this@ProfileClient, "Add Product", Toast.LENGTH_LONG).show()
-                        startActivity(Intent(this@ProfileClient, CreateProduct::class.java)
-                                .putExtra("ID", id))
                         dialog.dismiss()
+                         startActivity(Intent(this@ProfileClient, CreateProduct::class.java)
+                                .putExtra("ID", id))
+
                         CustomIntent.customType(this@ProfileClient, "fadein-to-fadeout")
                     }
 
@@ -306,5 +320,7 @@ class ProfileClient : AppCompatActivity() {
         }
 
     }
+
+
 
 }

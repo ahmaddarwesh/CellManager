@@ -49,6 +49,7 @@ class HomeActivity : AppCompatActivity() {
         addNew.setOnClickListener {
             startActivity(Intent(this@HomeActivity, AccountsList::class.java)
                     .putExtra("type",1))
+            CustomIntent.customType(this, "fadein-to-fadeout")
         }
 
         Clients.setOnClickListener {
@@ -108,7 +109,7 @@ class HomeActivity : AppCompatActivity() {
             it.dismiss()
         }.setCancelButton("Exit") {
              finish()
-            System.exit(0)
+
         }.show()
     }
 

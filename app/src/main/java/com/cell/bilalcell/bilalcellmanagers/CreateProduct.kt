@@ -2,27 +2,19 @@ package com.cell.bilalcell.bilalcellmanagers
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.net.ConnectivityManager
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-
 import android.view.View
-
 import android.widget.AdapterView
 import android.widget.Toast
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.auth.User
 import kotlinx.android.synthetic.main.activity_create_product.*
 import maes.tech.intentanim.CustomIntent
-import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-
 import java.util.*
 
 class CreateProduct : AppCompatActivity() {
@@ -37,9 +29,9 @@ class CreateProduct : AppCompatActivity() {
     val Users = db.collection("Users")
 
     var name_of_com = "Other"
+    var countP: Long = 0
 
-    var countP :Long= 0
-
+    var i = 0
     @SuppressLint("SimpleDateFormat")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +40,7 @@ class CreateProduct : AppCompatActivity() {
         val id = intent.extras.getString("ID")
         initCompanies()
 
-        if(!isOnline()){
+        if (!isOnline()) {
             val sandbar = Snackbar
                     .make(con_cp, "Check your internet connection", Snackbar.LENGTH_LONG)
             sandbar.view.setBackgroundColor(Color.RED)
@@ -117,7 +109,7 @@ class CreateProduct : AppCompatActivity() {
                     .collection("Products")
 
             if (name_of_pro.text.trim().isEmpty() || price_of_pro.text.trim().isEmpty() || first_pay.text.trim().isEmpty()) {
-                SweetAlert().sweetAlertDialog(this,"Field Required", "You cannot leave field empty. \n Completion info to continue", SweetAlertDialog.ERROR_TYPE,
+                SweetAlert().sweetAlertDialog(this, "Field Required", "You cannot leave field empty. \n Completion info to continue", SweetAlertDialog.ERROR_TYPE,
                         "Ok").setConfirmButton("Ok") {
                     it.dismiss()
                 }.show()
@@ -135,8 +127,10 @@ class CreateProduct : AppCompatActivity() {
                 Product.put("ProductName", NameOfPro)
                 Product.put("ProductPrice", PriceOfPro)
                 Product.put("ProductDate", date)
-                Product.put("CountPayments",1)
+                Product.put("CountPayments", 1)
                 Product.put("ProductTime", t)
+                Product.put("ID",countP)
+
 
                 val payment = HashMap<String, Any>()
                 payment.put("PayCash", FirstPay)
@@ -144,21 +138,21 @@ class CreateProduct : AppCompatActivity() {
                 payment.put("PaymentDate", DateNow())
                 payment.put("PaymentTime", TimeNow())
 
-                if(!isOnline()){
-                    SweetAlert().sweetAlertDialog(this,"Error",
+                if (!isOnline()) {
+                    SweetAlert().sweetAlertDialog(this, "Error",
                             "Check Your Internet Connection!",
                             SweetAlertDialog.ERROR_TYPE,
                             "Ok").setConfirmButton("Ok") {
                         it.dismiss()
                     }.show()
-                }else{
+                } else {
                     Users.document("USER_$id").collection("Products").document("Product_$countP").set(Product)
                             .addOnSuccessListener { it2 ->
                                 Products.document("Product_$countP")
                                         .collection("Payments")
                                         .document("Payment_1")
                                         .set(payment)
-                                SweetAlert().sweetAlertDialog(this,"Successful", "Done Successfully add Product", SweetAlertDialog.SUCCESS_TYPE,
+                                SweetAlert().sweetAlertDialog(this, "Successful", "Done Successfully add Product", SweetAlertDialog.SUCCESS_TYPE,
                                         "Done").setConfirmButton("Done") {
                                     Users.document("USER_$id").update(
                                             "CountProduct", countP
@@ -169,7 +163,7 @@ class CreateProduct : AppCompatActivity() {
 
                             }
                             .addOnFailureListener { it3 ->
-                                SweetAlert().sweetAlertDialog(this,"Fail", "Error : ${it3.message}", SweetAlertDialog.ERROR_TYPE,
+                                SweetAlert().sweetAlertDialog(this, "Fail", "Error : ${it3.message}", SweetAlertDialog.ERROR_TYPE,
                                         "Ok").setConfirmButton("Ok") {
                                     it.dismiss()
                                 }.show()
@@ -216,15 +210,14 @@ class CreateProduct : AppCompatActivity() {
     }
 
 
-
     override fun onBackPressed() {
         if (name_of_pro.text.isEmpty() && price_of_pro.text.isEmpty()
-                && first_pay.text.isEmpty() ) {
+                && first_pay.text.isEmpty()) {
             finish()
         } else {
-            SweetAlert().sweetAlertConf(this,"Discard info?", "Are you sure discard information typed?",
+            SweetAlert().sweetAlertConf(this, "Discard info?", "Are you sure discard information typed?",
                     SweetAlertDialog.WARNING_TYPE, "Cancel", "Discard").setConfirmButton("Cancel") {
-               it.dismiss()
+                it.dismiss()
             }.setCancelButton("Discard") {
                 finish()
             }.show()

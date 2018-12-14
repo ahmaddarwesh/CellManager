@@ -76,25 +76,7 @@ class CreateClient : AppCompatActivity() {
             showDialog(this)
         }
 
-        imgPreview.setOnClickListener {
-            try {
-                val id = Cookies().getInt(this, "ID")
-                val name = edt_fullname.text.toString()
-                val phone = edt_phonenumber.text.toString()
-                val address = edt_address.text.toString()
-                val desc = desc.text.toString()
-                val Info = " ID : $id \n NAME : $name\n PHONE NUMBER : $phone\n ADDRESS : $address\n\n DESCRIPTION :\n $desc"
-                DialogPreview(Info)
-            } catch (e: Exception) {
-                SweetAlert().sweetAlertDialog(this,"Error",
-                        "${e.message}",
-                        SweetAlertDialog.ERROR_TYPE,
-                        "Ok").setConfirmButton("Ok") {
-                    it.dismiss()
-                }.show()
-            }
 
-        }
 
         imgSuccess.setOnClickListener { it ->
 
@@ -108,7 +90,7 @@ class CreateClient : AppCompatActivity() {
                 }.show()
             } else {
                 progressBarLoading.visibility = View.VISIBLE
-                linearLayoutS.visibility = View.GONE
+                imgSuccess.visibility = View.GONE
 
 
                 val id: Int = Cookies().getInt(this, "ID")
@@ -127,7 +109,7 @@ class CreateClient : AppCompatActivity() {
 
                 if (!isOnline()) {
                     progressBarLoading.visibility = View.GONE
-                    linearLayoutS.visibility = View.VISIBLE
+                    imgSuccess.visibility = View.VISIBLE
                     SweetAlert().sweetAlertDialog(this,"Error",
                             "Check Your Internet Connection!",
                             SweetAlertDialog.ERROR_TYPE,
@@ -139,7 +121,7 @@ class CreateClient : AppCompatActivity() {
                             .addOnSuccessListener { it0 ->
                                 uploadImage()
                                 progressBarLoading.visibility = View.GONE
-                                linearLayoutS.visibility = View.VISIBLE
+                                imgSuccess.visibility = View.VISIBLE
                                 val id1 = id + 1
                                 Cookies().SaveInt(this, "ID", id1)
                                 Count.setValue(id1)
@@ -164,7 +146,7 @@ class CreateClient : AppCompatActivity() {
                                     it.dismiss()
                                 }.show()
                                 progressBarLoading.visibility = View.GONE
-                                linearLayoutS.visibility = View.VISIBLE
+                                imgSuccess.visibility = View.VISIBLE
 
                             }
                 }
@@ -175,22 +157,7 @@ class CreateClient : AppCompatActivity() {
 
     }
 
-    fun DialogPreview(MyText: String) {
-        val dialogBuilder = AlertDialog.Builder(this)
-        val inflate = this.layoutInflater
-        val viewInfo = inflate.inflate(R.layout.preview_info, null)
-        dialogBuilder.setView(viewInfo)
-        dialogBuilder.setTitle("Preview Information")
-        val info = viewInfo.findViewById<TextView>(R.id.view_info)
-        info.text = MyText
-        dialogBuilder.setPositiveButton("Done") { dialog, whichButton ->
-            dialog.dismiss()
-        }
 
-        val b = dialogBuilder.create()
-        b.show()
-
-    }
 
     fun showDialog(activity: Activity) {
         try {

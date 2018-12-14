@@ -25,8 +25,7 @@ import com.squareup.picasso.Picasso
 import maes.tech.intentanim.CustomIntent
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.squareup.picasso.Callback
-import kotlinx.android.synthetic.main.activity_home.view.*
-import java.lang.Exception
+ import java.lang.Exception
 
 
 class AccountsList : AppCompatActivity() {
@@ -183,8 +182,7 @@ class AccountsList : AppCompatActivity() {
                             }
 
                             override fun onError(e: Exception?) {
-//                                Toast.makeText(this@AccountsList,"E ${e!!.message}",Toast.LENGTH_LONG).show()
-                                Picasso.get().load(R.drawable.loading_profile).into(holder.profile_Image)
+                                 Picasso.get().load(R.drawable.loading_profile).into(holder.profile_Image)
                             }
                         })
                     }

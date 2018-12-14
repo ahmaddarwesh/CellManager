@@ -19,7 +19,7 @@ import java.util.ArrayList
 
 class SimServices : AppCompatActivity() {
 
-    var myArrayItems = ArrayList<card_services>()
+    var myArrayItems = ArrayList<services>()
     var araylist: ArrayList<CompanyItems>? = null
     var Adapter: ComAdapter? = null
 
@@ -57,7 +57,7 @@ class SimServices : AppCompatActivity() {
         }
     }
 
-    inner class AdapterServices(var list: ArrayList<card_services>, var conx: Context) : RecyclerView.Adapter<AdapterServices.MyHolder>() {
+    inner class AdapterServices(var list: ArrayList<services>, var conx: Context) : RecyclerView.Adapter<AdapterServices.MyHolder>() {
 
         inner class MyHolder(view: View) : RecyclerView.ViewHolder(view) {
             var img = view.findViewById<ImageView>(R.id.img_com)
@@ -98,16 +98,16 @@ class SimServices : AppCompatActivity() {
         }
     }
 
-    fun alfa_init(arr: ArrayList<card_services>) {
-        arr.add(card_services(R.drawable.alfa, "ALFA", "internet", "10$", "MB", "500", "Month", "1", "NO", "Mi500", "1050"))
-        arr.add(card_services(R.drawable.alfa, "ALFA", "internet", "17$", "GB", "1.5", "Month", "1", "NO", "Mi1.5", "1050"))
-        arr.add(card_services(R.drawable.alfa, "ALFA", "internet", "23$", "GB", "5", "Month", "1", "NO", "Mi5", "1050"))
+    fun alfa_init(arr: ArrayList<services>) {
+        arr.add(services(R.drawable.alfa, "ALFA", "internet", "10$", "MB", "500", "Month", "1", "NO", "Mi500", "1050"))
+        arr.add(services(R.drawable.alfa, "ALFA", "internet", "17$", "GB", "1.5", "Month", "1", "NO", "Mi1.5", "1050"))
+        arr.add(services(R.drawable.alfa, "ALFA", "internet", "23$", "GB", "5", "Month", "1", "NO", "Mi5", "1050"))
     }
 
-    fun mtc_init(arr: ArrayList<card_services>) {
-        arr.add(card_services(R.drawable.touch, "MTC (touch)", "internet", "10$", "MB", "500", "Month", "1", "NO", "Hs1", "1188"))
-        arr.add(card_services(R.drawable.touch, "MTC (touch)", "internet", "19$", "GB", "1.75", "Month", "1", "YES", "Hs2", "1188"))
-        arr.add(card_services(R.drawable.touch, "MTC (touch)", "internet", "26$", "GB", "6", "Month", "1", "NO", "Hs3", "1188"))
+    fun mtc_init(arr: ArrayList<services>) {
+        arr.add(services(R.drawable.touch, "MTC (touch)", "internet", "10$", "MB", "500", "Month", "1", "NO", "Hs1", "1188"))
+        arr.add(services(R.drawable.touch, "MTC (touch)", "internet", "19$", "GB", "1.75", "Month", "1", "YES", "Hs2", "1188"))
+        arr.add(services(R.drawable.touch, "MTC (touch)", "internet", "26$", "GB", "6", "Month", "1", "NO", "Hs3", "1188"))
 
     }
 

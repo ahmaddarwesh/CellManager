@@ -125,7 +125,7 @@ class ProById : AppCompatActivity() {
 
             val cash = dialog.findViewById<EditText>(R.id.cash)
             val description = dialog.findViewById<EditText>(R.id.desc)
-            val addBtn = dialog.findViewById<Button>(R.id.add_btn)
+            val addBtn = dialog.findViewById<ImageView>(R.id.add_btn)
             val edit_product = dialog.findViewById<TextView>(R.id.edit_product)
             val text_type = dialog.findViewById<TextView>(R.id.text_type)
             val img_cancel = dialog.findViewById<ImageView>(R.id.img_cancel)
@@ -171,7 +171,6 @@ class ProById : AppCompatActivity() {
                     }
 
             addBtn.setOnClickListener {
-
 
                 val payment = HashMap<String, Any>()
                 payment.put("PayCash", "${cash.text} ${text_type.text}")

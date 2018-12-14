@@ -9,13 +9,14 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="340dp"
         android:layout_height="342dp"
-        android:background="@drawable/backg_card"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintVertical_bias="0.0"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
 
         <TextView
             android:id="@+id/textView21"
@@ -23,29 +24,30 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="12dp"
-            android:fontFamily="sans-serif-smallcaps"
             android:text="Add Payment to:"
-            android:textAllCaps="true"
+            android:textAllCaps="false"
             android:textColor="@color/cardview_dark_background"
-            android:textSize="24sp"
+            android:textSize="18sp"
             app:layout_constraintStart_toEndOf="@+id/imageView5"
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/cash"
-            android:layout_width="269dp"
+            android:layout_width="281dp"
             android:layout_height="54dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="24dp"
             android:layout_marginEnd="8dp"
-            android:background="@drawable/backg_tf"
+            android:background="@drawable/tf_new"
+            android:drawableLeft="@drawable/cash"
+            android:drawablePadding="10dp"
             android:ems="10"
-            android:hint="The Cash"
+            android:hint="Cash"
             android:inputType="textPersonName|number"
             android:padding="5dp"
-            android:textAlignment="textStart"
             android:textColor="@color/greenDark"
             android:textSize="24sp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -59,7 +61,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:background="@drawable/backg_tf"
+            android:background="@drawable/tf_new"
             android:ems="10"
             android:gravity="top|left"
             android:hint="Description"
@@ -74,22 +76,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cash" />
 
-        <Button
-            android:id="@+id/add_btn"
-            android:layout_width="0dp"
-            android:layout_height="39dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/backg_btn"
-            android:text="Done"
-            android:textColor="@color/button_text_color"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/desc"
-            app:layout_constraintVertical_bias="1.0" />
-
         <TextView
             android:id="@+id/edit_product"
             android:layout_width="wrap_content"
@@ -97,7 +83,7 @@
             android:layout_marginStart="8dp"
             android:text="Note 5 Plus 128G"
             android:textColor="@color/main_blue_stroke_color"
-            android:textSize="18sp"
+            android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/imageView5"
             app:layout_constraintTop_toBottomOf="@+id/textView21" />
@@ -106,13 +92,15 @@
             android:id="@+id/text_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="32dp"
+            android:layout_marginEnd="16dp"
             android:padding="5dp"
             android:text="$"
             android:textColor="@color/material_blue_grey_95"
-            android:textSize="30sp"
+            android:textSize="24sp"
             android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.652"
             app:layout_constraintStart_toEndOf="@+id/cash"
             app:layout_constraintTop_toBottomOf="@+id/edit_product" />
 
@@ -120,6 +108,7 @@
             android:id="@+id/img_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@color/error_stroke_color"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
@@ -128,11 +117,21 @@
             android:id="@+id/imageView5"
             android:layout_width="58dp"
             android:layout_height="55dp"
-            android:layout_marginStart="4dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/money" />
+
+        <ImageView
+            android:id="@+id/add_btn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="4dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/image6" />
 
 
     </android.support.constraint.ConstraintLayout>
