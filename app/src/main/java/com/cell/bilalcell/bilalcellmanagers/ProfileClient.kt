@@ -20,6 +20,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_profile_client.*
+import kotlinx.android.synthetic.main.show_image.*
 import maes.tech.intentanim.CustomIntent
 import java.io.File
 import java.io.FileOutputStream
@@ -34,7 +35,6 @@ class ProfileClient : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile_client)
-
 
 
         val id = intent.extras.getString("ID")
@@ -61,18 +61,18 @@ class ProfileClient : AppCompatActivity() {
             }
         }
 
-
+        var img: Uri? = null
         Docu.document("USER_$id").get()
                 .addOnCompleteListener {
                     if (it.isSuccessful) {
-                        val img: Uri = Uri.parse(it.result!!.get("img_url").toString().trim())
+                        img = Uri.parse(it.result!!.get("img_url").toString().trim())
                         Picasso.get().load(img).into(test2, object : Callback {
                             override fun onSuccess() {
                                 Picasso.get().load(img).into(profile_info_image)
                             }
 
                             override fun onError(e: java.lang.Exception?) {
-                                 Picasso.get().load(R.drawable.loading_profile).into(profile_info_image)
+                                Picasso.get().load(R.drawable.loading_profile).into(profile_info_image)
                             }
 
                         })
@@ -97,9 +97,9 @@ class ProfileClient : AppCompatActivity() {
                         }
 
                         recy_pro.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
-                        val adapter = AdapterOfProducts(this, MyList, id,name)
+                        val adapter = AdapterOfProducts(this, MyList, id, name)
                         recy_pro.adapter = adapter
-                        if(!MyList.isEmpty()){
+                        if (!MyList.isEmpty()) {
                             recy_pro.visibility = View.VISIBLE
                         }
                     }
@@ -122,7 +122,6 @@ class ProfileClient : AppCompatActivity() {
             startActivity(sms_intent)
         }
 
-
         tv_name.setOnClickListener {
             val mIntent = intent
             finish()
@@ -131,7 +130,12 @@ class ProfileClient : AppCompatActivity() {
         }
 
         take_pic.setOnClickListener {
-            saveImage(TakeNow(linearLayout3), id)
+            saveImage(TakeNow(lin3), id)
+        }
+
+        profile_info_image.setOnClickListener {
+            dialogImageShow(img)
+
         }
 
         addNew.setOnClickListener {
@@ -146,9 +150,9 @@ class ProfileClient : AppCompatActivity() {
 
                 addPayment.setOnClickListener {
                     dialog.dismiss()
-                    startActivity(Intent(this@ProfileClient,ProById::class.java)
-                            .putExtra("ID",id)
-                            .putExtra("nameOfUser",name))
+                    startActivity(Intent(this@ProfileClient, ProById::class.java)
+                            .putExtra("ID", id)
+                            .putExtra("nameOfUser", name))
                     CustomIntent.customType(this, "up-to-bottom")
 
                 }
@@ -156,7 +160,7 @@ class ProfileClient : AppCompatActivity() {
                 addProduct.setOnClickListener(object : View.OnClickListener {
                     override fun onClick(v: View?) {
                         dialog.dismiss()
-                         startActivity(Intent(this@ProfileClient, CreateProduct::class.java)
+                        startActivity(Intent(this@ProfileClient, CreateProduct::class.java)
                                 .putExtra("ID", id))
 
                         CustomIntent.customType(this@ProfileClient, "fadein-to-fadeout")
@@ -181,14 +185,14 @@ class ProfileClient : AppCompatActivity() {
                             Toast.makeText(this@ProfileClient, "Edit", Toast.LENGTH_LONG).show()
                         }
                         R.id.delete_user -> {
-                            SweetAlert().sweetAlertConf(this@ProfileClient,"Are you sure?", "Are you sure you want to delete this client?",
+                            SweetAlert().sweetAlertConf(this@ProfileClient, "Are you sure?", "Are you sure you want to delete this client?",
                                     SweetAlertDialog.WARNING_TYPE,
                                     "Yes", "No").setConfirmButton("Yes") { it2 ->
                                 it2.dismiss()
                                 Docu.document("USER_$id")
                                         .delete()
                                         .addOnSuccessListener { it1 ->
-                                            SweetAlert().sweetAlertDialog(this@ProfileClient,"Deleted",
+                                            SweetAlert().sweetAlertDialog(this@ProfileClient, "Deleted",
                                                     "The Client Successfully Deleted!",
                                                     SweetAlertDialog.SUCCESS_TYPE,
                                                     "Done").setConfirmButton("Done") {
@@ -199,7 +203,7 @@ class ProfileClient : AppCompatActivity() {
                                         }
 
                                         .addOnFailureListener { it ->
-                                            SweetAlert().sweetAlertDialog(this@ProfileClient,"Not Deleted",
+                                            SweetAlert().sweetAlertDialog(this@ProfileClient, "Not Deleted",
                                                     "The Client is not Deleted because:\n${it.message}",
                                                     SweetAlertDialog.SUCCESS_TYPE,
                                                     "Done").setConfirmButton("Done") {
@@ -225,10 +229,27 @@ class ProfileClient : AppCompatActivity() {
 
     }
 
-
     override fun finish() {
         super.finish()
         CustomIntent.customType(this, "bottom-to-up")
+    }
+
+    fun dialogImageShow(image: Uri?) {
+        try {
+            val dialog = Dialog(this)
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setCancelable(true)
+            dialog.setContentView(R.layout.show_image)
+
+            val imageShow = dialog.findViewById<ImageView>(R.id.image_show)
+
+            Picasso.get().load(image!!).into(imageShow)
+
+            dialog.show()
+        } catch (e: Exception) {
+            Toast.makeText(this, "Error Catch ${e.message}", Toast.LENGTH_LONG).show()
+        }
+
     }
 
     fun createBitScreen(view: View): Bitmap {
@@ -253,10 +274,10 @@ class ProfileClient : AppCompatActivity() {
             val fOut = FileOutputStream(file)
 
             bmp.compress(Bitmap.CompressFormat.JPEG, 85, fOut)
-            MediaStore.Images.Media.insertImage(contentResolver, bmp, "USER_$id.jpeg", "Cell manager Client");
+            MediaStore.Images.Media.insertImage(contentResolver, bmp, "USER_$id.jpeg", "Cell manager Clients");
             fOut.flush()
             fOut.close()
-            SweetAlert().sweetAlertDialog(this,"Success saved",
+            SweetAlert().sweetAlertDialog(this, "Success saved",
                     "Image is successfully saved in:\n $dir",
                     SweetAlertDialog.SUCCESS_TYPE,
                     "Done").setConfirmButton("Done") {
@@ -266,7 +287,7 @@ class ProfileClient : AppCompatActivity() {
             Toast.makeText(this, "Success saved in $dir", Toast.LENGTH_LONG).show()
 
         } catch (e: Exception) {
-            SweetAlert().sweetAlertDialog(this,"Not Saved!",
+            SweetAlert().sweetAlertDialog(this, "Not Saved!",
                     "Image Not Saved Because:\n${e.message}",
                     SweetAlertDialog.SUCCESS_TYPE,
                     "Done").setConfirmButton("Done") {
@@ -277,7 +298,7 @@ class ProfileClient : AppCompatActivity() {
 
     }
 
-    inner class AdapterOfProducts(var conx: Context, var list: ArrayList<products>, var idUser: String,var name_of_user:String) : RecyclerView.Adapter<AdapterOfProducts.MyHolderPro>() {
+    inner class AdapterOfProducts(var conx: Context, var list: ArrayList<products>, var idUser: String, var name_of_user: String) : RecyclerView.Adapter<AdapterOfProducts.MyHolderPro>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolderPro {
             val myView = LayoutInflater.from(conx).inflate(R.layout.card_list_products, parent, false)
             return MyHolderPro(myView)
@@ -290,8 +311,8 @@ class ProfileClient : AppCompatActivity() {
             holder.Date.text = myL.Date
 
             holder.lay.setOnClickListener {
-                val pos = position +1
-                Toast.makeText(this@ProfileClient,"Y $pos",Toast.LENGTH_LONG).show()
+                val pos = position + 1
+                Toast.makeText(this@ProfileClient, "Y $pos", Toast.LENGTH_LONG).show()
                 val nameOfUser = name_of_user
 
                 conx.startActivity(Intent(conx, ProductInfo::class.java)
@@ -299,8 +320,8 @@ class ProfileClient : AppCompatActivity() {
                         .putExtra("com_name", myL.CompanyName)
                         .putExtra("prod_date", myL.Date)
                         .putExtra("IdUser", idUser)
-                        .putExtra("IdProd",pos)
-                        .putExtra("NameUser",nameOfUser))
+                        .putExtra("IdProd", pos)
+                        .putExtra("NameUser", nameOfUser))
                 CustomIntent.customType(conx, "up-to-bottom")
             }
 
@@ -320,7 +341,6 @@ class ProfileClient : AppCompatActivity() {
         }
 
     }
-
 
 
 }

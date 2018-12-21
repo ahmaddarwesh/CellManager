@@ -71,11 +71,12 @@ class MainActivity : AppCompatActivity() {
                                 Toast.makeText(this@MainActivity, "Authentication failed.",
                                         Toast.LENGTH_SHORT).show()
                                 SweetAlert().sweetAlertDialog(this,"Authentication failed",
-                                        "Please check Email or Password and try again.",
+                                        "Please check Email or Password and try again. \n ${task.result}",
                                         SweetAlertDialog.ERROR_TYPE,
                                         "Ok").setConfirmButton("Ok") {
                                     it.dismiss()
                                 }.show()
+
                             }
 
                         }

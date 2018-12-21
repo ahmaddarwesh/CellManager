@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="No Product Found"
-            android:textColor="@color/Primary2"
+            android:textColor="@color/button_text_color"
             android:textSize="30sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
