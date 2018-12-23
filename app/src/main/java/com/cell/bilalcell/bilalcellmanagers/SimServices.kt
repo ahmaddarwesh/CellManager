@@ -102,11 +102,24 @@ class SimServices : AppCompatActivity() {
         arr.add(services(R.drawable.alfa, "ALFA", "internet", "10$", "MB", "500", "Month", "1", "NO", "Mi500", "1050"))
         arr.add(services(R.drawable.alfa, "ALFA", "internet", "17$", "GB", "1.5", "Month", "1", "NO", "Mi1.5", "1050"))
         arr.add(services(R.drawable.alfa, "ALFA", "internet", "23$", "GB", "5", "Month", "1", "NO", "Mi5", "1050"))
+        arr.add(services(R.drawable.alfa, "ALFA", "internet", "23$", "GB", "5", "Month", "1", "NO", "Mi5", "1050"))
+        arr.add(services(R.drawable.alfa, "ALFA", "internet", "23$", "GB", "5", "Month", "1", "NO", "Mi5", "1050"))
+        arr.add(services(R.drawable.alfa, "ALFA", "internet", "23$", "GB", "5", "Month", "1", "NO", "Mi5", "1050"))
+        arr.add(services(R.drawable.alfa, "ALFA", "internet", "23$", "GB", "5", "Month", "1", "NO", "Mi5", "1050"))
+        arr.add(services(R.drawable.alfa, "ALFA", "internet", "23$", "GB", "5", "Month", "1", "NO", "Mi5", "1050"))
+        arr.add(services(R.drawable.alfa, "ALFA", "internet", "23$", "GB", "5", "Month", "1", "NO", "Mi5", "1050"))
     }
 
     fun mtc_init(arr: ArrayList<services>) {
         arr.add(services(R.drawable.touch, "MTC (touch)", "internet", "10$", "MB", "500", "Month", "1", "NO", "Hs1", "1188"))
         arr.add(services(R.drawable.touch, "MTC (touch)", "internet", "19$", "GB", "1.75", "Month", "1", "YES", "Hs2", "1188"))
+        arr.add(services(R.drawable.touch, "MTC (touch)", "internet", "26$", "GB", "6", "Month", "1", "NO", "Hs3", "1188"))
+        arr.add(services(R.drawable.touch, "MTC (touch)", "internet", "26$", "GB", "6", "Month", "1", "NO", "Hs3", "1188"))
+        arr.add(services(R.drawable.touch, "MTC (touch)", "internet", "26$", "GB", "6", "Month", "1", "NO", "Hs3", "1188"))
+        arr.add(services(R.drawable.touch, "MTC (touch)", "internet", "26$", "GB", "6", "Month", "1", "NO", "Hs3", "1188"))
+        arr.add(services(R.drawable.touch, "MTC (touch)", "internet", "26$", "GB", "6", "Month", "1", "NO", "Hs3", "1188"))
+        arr.add(services(R.drawable.touch, "MTC (touch)", "internet", "26$", "GB", "6", "Month", "1", "NO", "Hs3", "1188"))
+        arr.add(services(R.drawable.touch, "MTC (touch)", "internet", "26$", "GB", "6", "Month", "1", "NO", "Hs3", "1188"))
         arr.add(services(R.drawable.touch, "MTC (touch)", "internet", "26$", "GB", "6", "Month", "1", "NO", "Hs3", "1188"))
 
     }

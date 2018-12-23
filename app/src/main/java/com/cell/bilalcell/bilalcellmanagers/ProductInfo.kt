@@ -240,7 +240,7 @@ class ProductInfo : AppCompatActivity() {
     class AdapterPayments(var conx: Context, var list: ArrayList<Payment>) : RecyclerView.Adapter<AdapterPayments.MyHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdapterPayments.MyHolder {
-            var myView = LayoutInflater.from(conx).inflate(R.layout.card_payment,parent,false)
+            val myView = LayoutInflater.from(conx).inflate(R.layout.card_payment,parent,false)
             return MyHolder(myView)
         }
 

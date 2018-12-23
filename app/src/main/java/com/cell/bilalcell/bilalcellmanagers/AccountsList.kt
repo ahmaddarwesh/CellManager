@@ -1,13 +1,12 @@
 package com.cell.bilalcell.bilalcellmanagers
 
+import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import kotlinx.android.synthetic.main.activity_accounts_list.*
 import android.content.Intent
 import android.graphics.Color
@@ -18,14 +17,14 @@ import android.support.constraint.ConstraintLayout
 import android.support.design.widget.Snackbar
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.MenuItem
+import android.view.*
 import android.widget.*
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
 import maes.tech.intentanim.CustomIntent
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.squareup.picasso.Callback
- import java.lang.Exception
+import java.lang.Exception
 
 
 class AccountsList : AppCompatActivity() {
@@ -40,7 +39,7 @@ class AccountsList : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_accounts_list)
 
-        if(!isOnline()){
+        if (!isOnline()) {
             val sandbar = Snackbar
                     .make(con_al, "Check your internet connection", Snackbar.LENGTH_LONG)
             sandbar.view.setBackgroundColor(Color.RED)
@@ -55,33 +54,6 @@ class AccountsList : AppCompatActivity() {
 
 
         progressBar.visibility = View.VISIBLE
-
-
-        UsersD.orderBy("ID").limit(10).get().addOnCompleteListener {
-            if (it.isSuccessful) {
-                for (document in it.result!!) {
-                    val name = document.get("Name")
-                    val number = document.get("PhoneNumber")
-                    val ID = document.get("ID")
-                    list.add(clients(ID.toString(), name.toString(), number.toString()))
-                }
-                if (list.isEmpty()) {
-                    recy.visibility = View.GONE
-                    lay_empty.visibility = View.VISIBLE
-                    progressBar.visibility = View.GONE
-                } else {
-                    recy.visibility = View.VISIBLE
-                    lay_empty.visibility = View.GONE
-                    recy.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
-                    recy.adapter = AdapterUsers(this, list)
-                    progressBar.visibility = View.GONE
-                }
-
-            } else {
-                Toast.makeText(this, "ERROR ${it.exception}", Toast.LENGTH_LONG).show()
-                progressBar.visibility = View.GONE
-            }
-        }
 
         name_search.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
@@ -163,7 +135,7 @@ class AccountsList : AppCompatActivity() {
                             .putExtra("Number", list.mobile))
                     CustomIntent.customType(context, "up-to-bottom")
                 } else {
-                    startActivity(Intent(context, ProById::class.java).putExtra("ID", list.id).putExtra("nameOfUser",list.username))
+                    startActivity(Intent(context, ProById::class.java).putExtra("ID", list.id).putExtra("nameOfUser", list.username))
                     CustomIntent.customType(context, "up-to-bottom")
                 }
 
@@ -182,7 +154,7 @@ class AccountsList : AppCompatActivity() {
                             }
 
                             override fun onError(e: Exception?) {
-                                 Picasso.get().load(R.drawable.loading_profile).into(holder.profile_Image)
+                                Picasso.get().load(R.drawable.loading_profile).into(holder.profile_Image)
                             }
                         })
                     }
@@ -193,62 +165,10 @@ class AccountsList : AppCompatActivity() {
                 }
             }
 
-            holder.more.setOnLongClickListener(object : View.OnLongClickListener {
-                override fun onLongClick(v: View?): Boolean {
-
-                    val menuPop = PopupMenu(context, holder.more)
-                    menuPop.inflate(R.menu.user_menu)
-                    menuPop.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
-                        override fun onMenuItemClick(item: MenuItem?): Boolean {
-                            when (item!!.itemId) {
-                                R.id.edit_user -> {
-
-                                }
-                                R.id.delete_user -> {
-                                    sweetAlertConf("Are you sure?", "Are you sure you want to delete this client?",
-                                            SweetAlertDialog.WARNING_TYPE,
-                                            "Yes", "No").setConfirmButton("Yes") { it2 ->
-                                        it2.dismiss()
-                                        UsersD.document("USER_${list.id}")
-                                                .delete()
-                                                .addOnSuccessListener { it ->
-                                                    SweetAlert().sweetAlertDialog(context,"Deleted",
-                                                            "The Client Successfully Deleted!",
-                                                            SweetAlertDialog.SUCCESS_TYPE,
-                                                            "Done").setConfirmButton("Done") {
-                                                        it.dismiss()
-                                                        startActivity(Intent(this@AccountsList, AccountsList::class.java))
-                                                        finish()
-                                                    }.show()
-                                                }
-                                                .addOnFailureListener { it3 ->
-                                                    SweetAlert().sweetAlertDialog(context,"Not Deleted",
-                                                            "The Client is not Deleted because:\n${it3.message}",
-                                                            SweetAlertDialog.SUCCESS_TYPE,
-                                                            "Done").setConfirmButton("Done") {
-                                                        it.dismiss()
-                                                    }.show()
-                                                }
-
-                                    }.setCancelButton("No") {
-                                        it.dismiss()
-                                    }.show()
-
-                                }
-                                R.id.share_info -> {
-
-                                }
-                            }
-                            return false
-                        }
-
-                    })
-                    menuPop.show()
-                    return true
-                }
-
-
-            })
+            holder.more.setOnLongClickListener {
+                dialogOptions(list.id, list.username, list.mobile)
+                true
+            }
 
         }
 
@@ -263,28 +183,117 @@ class AccountsList : AppCompatActivity() {
 
     }
 
-    private fun sweetAlertDialog(Title: String, Content: String, Type: Int, ConfermText: String): SweetAlertDialog {
-        val s = SweetAlertDialog(this, Type)
-        s.titleText = Title
-        s.contentText = Content
-        s.confirmText = ConfermText
 
-        return s
+    override fun onResume() {
+        super.onResume()
+        list.clear()
+        UsersD.orderBy("ID").limit(10).get().addOnCompleteListener {
+            if (it.isSuccessful) {
+                for (document in it.result!!) {
+                    val name = document.get("Name")
+                    val number = document.get("PhoneNumber")
+                    val ID = document.get("ID")
+                    list.add(clients(ID.toString(), name.toString(), number.toString()))
+                }
+                if (list.isEmpty()) {
+                    recy.visibility = View.GONE
+                    lay_empty.visibility = View.VISIBLE
+                    progressBar.visibility = View.GONE
+                } else {
+                    recy.visibility = View.VISIBLE
+                    lay_empty.visibility = View.GONE
+                    recy.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
+                    recy.adapter = AdapterUsers(this, list)
+                    progressBar.visibility = View.GONE
+                }
+
+            } else {
+                Toast.makeText(this, "ERROR ${it.exception}", Toast.LENGTH_LONG).show()
+                progressBar.visibility = View.GONE
+            }
+        }
+
     }
 
-    private fun sweetAlertConf(Title: String, Content: String, Type: Int, ConfermText: String, cancelText: String): SweetAlertDialog {
-        val s = SweetAlertDialog(this, Type)
-        s.titleText = Title
-        s.contentText = Content
-        s.confirmText = ConfermText
-        s.cancelText = cancelText
-        return s
+    @SuppressLint("SetTextI18n")
+    fun dialogOptions(id: String, Name: String, Num: String) {
+        val dialog = Dialog(this)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(true)
+        dialog.setContentView(R.layout.card_options)
+
+        val txt = dialog.findViewById<TextView>(R.id.tv_edit)
+        txt.text = "View Profile"
+        val icon = dialog.findViewById<ImageView>(R.id.icon_edit)
+        icon.setImageResource(R.drawable.ic_person_outline_black_24dp)
+        val options = dialog.findViewById<TextView>(R.id.txt_options).setText(Name)
+
+
+        val edit = dialog.findViewById<LinearLayout>(R.id.Lin_Edit)
+        edit.setOnClickListener {
+            dialog.dismiss()
+            startActivity(Intent(this, ProfileClient::class.java).putExtra("ID", id)
+                    .putExtra("Name", Name)
+                    .putExtra("Number", Num))
+            CustomIntent.customType(this , "up-to-bottom")
+
+        }
+
+        val delete = dialog.findViewById<LinearLayout>(R.id.Lin_Del)
+        delete.setOnClickListener {
+            dialog.dismiss()
+            SweetAlert().sweetAlertConf(this, "Are you sure?", "Are you sure you want to delete this client?",
+                    SweetAlertDialog.WARNING_TYPE,
+                    "Yes", "No").setConfirmButton("Yes") { it2 ->
+                it2.dismiss()
+                UsersD.document("USER_$id")
+                        .delete()
+                        .addOnSuccessListener { it1 ->
+                            SweetAlert().sweetAlertDialog(this, "Deleted",
+                                    "The Client Successfully Deleted!",
+                                    SweetAlertDialog.SUCCESS_TYPE,
+                                    "Done").setConfirmButton("Done") {
+                                it.dismiss()
+                                finish()
+                            }.show()
+                        }
+
+                        .addOnFailureListener { it ->
+                            SweetAlert().sweetAlertDialog(this, "Not Deleted",
+                                    "The Client is not Deleted because:\n${it.message}",
+                                    SweetAlertDialog.SUCCESS_TYPE,
+                                    "Done").setConfirmButton("Done") {
+                                it.dismiss()
+
+                            }.show()
+                        }
+            }.setCancelButton("No") {
+                it.dismiss()
+            }.show()
+        }
+
+        val share = dialog.findViewById<LinearLayout>(R.id.Lin_Sh)
+        share.setOnClickListener {
+            dialog.dismiss()
+            val shareBody = "Name: $Name\nPhone Number: $Num"
+            val sharingIntent = Intent(android.content.Intent.ACTION_SEND)
+            sharingIntent.type = "text/plain"
+            sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Client Cell Manager")
+            sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody)
+            startActivity(Intent.createChooser(sharingIntent, "Share using"))
+
+        }
+
+
+
+        dialog.show()
     }
 
     override fun finish() {
         super.finish()
         CustomIntent.customType(this, "fadein-to-fadeout")
     }
+
     fun isOnline(): Boolean {
         val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val netInfo = cm.activeNetworkInfo

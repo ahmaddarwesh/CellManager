@@ -38,7 +38,6 @@ class ProfileClient : AppCompatActivity() {
 
 
         val id = intent.extras.getString("ID")
-
         val name = intent.extras.getString("Name")
         val number = intent.extras.getString("Number")
 
@@ -51,10 +50,10 @@ class ProfileClient : AppCompatActivity() {
         val user_info = Docu.document("USER_$id")
         user_info.get().addOnCompleteListener {
             if (it.isSuccessful) {
-                val address = it.result!!.get("Address")
-                val Desc = it.result!!.get("Description")
-                tv_address.text = address.toString()
-                tv_disc.text = Desc.toString()
+                val address = it.result!!.get("Address").toString()
+                val Desc = it.result!!.get("Description").toString()
+                tv_address.text = address
+                tv_disc.text = Desc
 
             } else {
                 Toast.makeText(this, "ERROR ${it.exception}", Toast.LENGTH_LONG).show()
@@ -176,55 +175,7 @@ class ProfileClient : AppCompatActivity() {
         }
 
         menuOptions.setOnClickListener { it ->
-            val menuPop = PopupMenu(this, menuOptions)
-            menuPop.inflate(R.menu.user_menu)
-            menuPop.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
-                override fun onMenuItemClick(item: MenuItem?): Boolean {
-                    when (item!!.itemId) {
-                        R.id.edit_user -> {
-                            Toast.makeText(this@ProfileClient, "Edit", Toast.LENGTH_LONG).show()
-                        }
-                        R.id.delete_user -> {
-                            SweetAlert().sweetAlertConf(this@ProfileClient, "Are you sure?", "Are you sure you want to delete this client?",
-                                    SweetAlertDialog.WARNING_TYPE,
-                                    "Yes", "No").setConfirmButton("Yes") { it2 ->
-                                it2.dismiss()
-                                Docu.document("USER_$id")
-                                        .delete()
-                                        .addOnSuccessListener { it1 ->
-                                            SweetAlert().sweetAlertDialog(this@ProfileClient, "Deleted",
-                                                    "The Client Successfully Deleted!",
-                                                    SweetAlertDialog.SUCCESS_TYPE,
-                                                    "Done").setConfirmButton("Done") {
-                                                it.dismiss()
-                                                startActivity(Intent(this@ProfileClient, AccountsList::class.java))
-                                                finish()
-                                            }.show()
-                                        }
-
-                                        .addOnFailureListener { it ->
-                                            SweetAlert().sweetAlertDialog(this@ProfileClient, "Not Deleted",
-                                                    "The Client is not Deleted because:\n${it.message}",
-                                                    SweetAlertDialog.SUCCESS_TYPE,
-                                                    "Done").setConfirmButton("Done") {
-                                                it.dismiss()
-
-                                            }.show()
-                                        }
-                            }.setCancelButton("No") {
-                                it.dismiss()
-                            }.show()
-                        }
-                        R.id.share_info -> {
-                            Toast.makeText(this@ProfileClient, "Share", Toast.LENGTH_LONG).show()
-                        }
-                    }
-
-                    return false
-                }
-
-            })
-            menuPop.show()
+            dialogOptions(id, name, number )
         }
 
     }
@@ -232,6 +183,87 @@ class ProfileClient : AppCompatActivity() {
     override fun finish() {
         super.finish()
         CustomIntent.customType(this, "bottom-to-up")
+    }
+
+
+    //DialogOptions
+    fun dialogOptions(id: String, Name: String, Num: String ) {
+        val dialog = Dialog(this)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(true)
+        dialog.setContentView(R.layout.card_options)
+
+        val edit = dialog.findViewById<LinearLayout>(R.id.Lin_Edit)
+        edit.setOnClickListener {
+            dialog.dismiss()
+            dialogEditInfo(id,Name,Num )
+        }
+
+        val delete = dialog.findViewById<LinearLayout>(R.id.Lin_Del)
+        delete.setOnClickListener {
+            dialog.dismiss()
+            SweetAlert().sweetAlertConf(this, "Are you sure?", "Are you sure you want to delete this client?",
+                    SweetAlertDialog.WARNING_TYPE,
+                    "Yes", "No").setConfirmButton("Yes") { it2 ->
+                it2.dismiss()
+                Docu.document("USER_$id")
+                        .delete()
+                        .addOnSuccessListener { it1 ->
+                            SweetAlert().sweetAlertDialog(this@ProfileClient, "Deleted",
+                                    "The Client Successfully Deleted!",
+                                    SweetAlertDialog.SUCCESS_TYPE,
+                                    "Done").setConfirmButton("Done") {
+                                it.dismiss()
+                                finish()
+                            }.show()
+                        }
+
+                        .addOnFailureListener { it ->
+                            SweetAlert().sweetAlertDialog(this, "Not Deleted",
+                                    "The Client is not Deleted because:\n${it.message}",
+                                    SweetAlertDialog.SUCCESS_TYPE,
+                                    "Done").setConfirmButton("Done") {
+                                it.dismiss()
+
+                            }.show()
+                        }
+            }.setCancelButton("No") {
+                it.dismiss()
+            }.show()
+        }
+
+        val share = dialog.findViewById<LinearLayout>(R.id.Lin_Sh)
+        share.setOnClickListener {
+            dialog.dismiss()
+            val shareBody = "Name: $Name\nPhone Number: $Num\nAddress: ${tv_address.text}\nDescription: ${tv_disc.text}"
+            val sharingIntent = Intent(android.content.Intent.ACTION_SEND)
+            sharingIntent.type = "text/plain"
+            sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Client Cell Manager info")
+            sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody)
+            startActivity(Intent.createChooser(sharingIntent, "Share using "))
+        }
+
+        dialog.show()
+    }
+
+    fun dialogEditInfo(id: String, Name: String, Num: String ) {
+        val dialog = Dialog(this)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.edit_client_info)
+        dialog.window.setGravity(Gravity.TOP)
+
+        dialog.findViewById<ImageView>(R.id.close_dialog).setOnClickListener {
+            dialog.dismiss()
+        }
+        dialog.findViewById<TextView>(R.id.edit_user_name).text = Name
+        dialog.findViewById<TextView>(R.id.edit_user_phone).text = Num
+        dialog.findViewById<TextView>(R.id.edit_user_address).text = tv_address.text
+        dialog.findViewById<TextView>(R.id.edit_user_desc).text = tv_disc.text
+
+
+
+        dialog.show()
     }
 
     fun dialogImageShow(image: Uri?) {
@@ -243,7 +275,12 @@ class ProfileClient : AppCompatActivity() {
 
             val imageShow = dialog.findViewById<ImageView>(R.id.image_show)
 
-            Picasso.get().load(image!!).into(imageShow)
+            if (image != null) {
+                Picasso.get().load(image).into(imageShow)
+            } else {
+                Picasso.get().load(R.drawable.loading_profile).into(imageShow)
+            }
+
 
             dialog.show()
         } catch (e: Exception) {
