@@ -31,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="1dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:background="@color/common_google_signin_btn_text_dark_default" />
 
@@ -62,7 +62,7 @@
                 android:layout_weight="1"
                 android:padding="2dp"
                 android:text="Edit client info"
-                android:textColor="@color/Primary2"
+                android:textColor="@color/greenDark"
                 android:textSize="18sp" />
 
         </LinearLayout>

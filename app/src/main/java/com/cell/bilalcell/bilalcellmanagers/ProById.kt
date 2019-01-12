@@ -3,7 +3,6 @@ package com.cell.bilalcell.bilalcellmanagers
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
-import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
@@ -171,7 +170,6 @@ class ProById : AppCompatActivity() {
                     }
 
             addBtn.setOnClickListener {
-
                 val payment = HashMap<String, Any>()
                 payment.put("PayCash", "${cash.text} ${text_type.text}")
                 payment.put("PayDescription", description.text.toString())

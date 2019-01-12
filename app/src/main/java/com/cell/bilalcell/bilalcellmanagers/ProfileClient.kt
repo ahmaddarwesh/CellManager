@@ -1,7 +1,6 @@
 package com.cell.bilalcell.bilalcellmanagers
 
 import android.app.Dialog
-import android.app.PendingIntent.getActivity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -20,7 +19,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_profile_client.*
-import kotlinx.android.synthetic.main.show_image.*
 import maes.tech.intentanim.CustomIntent
 import java.io.File
 import java.io.FileOutputStream
@@ -31,6 +29,7 @@ class ProfileClient : AppCompatActivity() {
     private var db = FirebaseFirestore.getInstance()
     private var Docu = db.collection("Users")
     private var MyList = ArrayList<products>()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,34 +79,6 @@ class ProfileClient : AppCompatActivity() {
                     }
                 }
 
-        Docu.document("USER_$id").collection("Products").get()
-                .addOnCompleteListener {
-                    if (it.isSuccessful) {
-                        for (doc in it.result!!) {
-                            val companyName = doc.get("CompanyName")
-                            val CountPayments = doc.get("CountPayments")
-                            val FirstPayment = doc.get("FirstPayment")
-                            val ProductName = doc.get("ProductName")
-                            val ProductPrice = doc.get("ProductPrice")
-                            val date = doc.get("ProductDate")
-                            val time = doc.get("ProductTime")
-                            MyList.add(products(companyName.toString(), CountPayments.toString(), FirstPayment.toString()
-                                    , ProductName.toString(), ProductPrice.toString(), date.toString(), time.toString()))
-                        }
-
-                        recy_pro.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
-                        val adapter = AdapterOfProducts(this, MyList, id, name)
-                        recy_pro.adapter = adapter
-                        if (!MyList.isEmpty()) {
-                            recy_pro.visibility = View.VISIBLE
-                        }
-                    }
-
-                }
-                .addOnFailureListener {
-                    Toast.makeText(this, "ERROR : ${it.message}", Toast.LENGTH_LONG).show()
-                }
-
 
         img_caling.setOnClickListener {
             val call = Uri.parse("tel:$number")
@@ -149,10 +120,20 @@ class ProfileClient : AppCompatActivity() {
 
                 addPayment.setOnClickListener {
                     dialog.dismiss()
-                    startActivity(Intent(this@ProfileClient, ProById::class.java)
-                            .putExtra("ID", id)
-                            .putExtra("nameOfUser", name))
-                    CustomIntent.customType(this, "up-to-bottom")
+                    if (!MyList.isEmpty()) {
+                        startActivity(Intent(this@ProfileClient, ProById::class.java)
+                                .putExtra("ID", id)
+                                .putExtra("nameOfUser", name))
+                        CustomIntent.customType(this, "up-to-bottom")
+                    } else {
+                        SweetAlert().sweetAlertDialog(this, "No Product Found",
+                                "Please add product before add payments",
+                                SweetAlertDialog.WARNING_TYPE, "Ok")
+                                .setConfirmButton("Ok") {
+                                    it.dismiss()
+                                }.show()
+                    }
+
 
                 }
 
@@ -175,7 +156,7 @@ class ProfileClient : AppCompatActivity() {
         }
 
         menuOptions.setOnClickListener { it ->
-            dialogOptions(id, name, number )
+            dialogOptions(id, tv_name.text.toString(), number)
         }
 
     }
@@ -187,7 +168,7 @@ class ProfileClient : AppCompatActivity() {
 
 
     //DialogOptions
-    fun dialogOptions(id: String, Name: String, Num: String ) {
+    fun dialogOptions(id: String, Name: String, Num: String) {
         val dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(true)
@@ -196,7 +177,7 @@ class ProfileClient : AppCompatActivity() {
         val edit = dialog.findViewById<LinearLayout>(R.id.Lin_Edit)
         edit.setOnClickListener {
             dialog.dismiss()
-            dialogEditInfo(id,Name,Num )
+            dialogEditInfo(id, Name, Num)
         }
 
         val delete = dialog.findViewById<LinearLayout>(R.id.Lin_Del)
@@ -216,9 +197,7 @@ class ProfileClient : AppCompatActivity() {
                                 it.dismiss()
                                 finish()
                             }.show()
-                        }
-
-                        .addOnFailureListener { it ->
+                        }.addOnFailureListener { it ->
                             SweetAlert().sweetAlertDialog(this, "Not Deleted",
                                     "The Client is not Deleted because:\n${it.message}",
                                     SweetAlertDialog.SUCCESS_TYPE,
@@ -246,7 +225,7 @@ class ProfileClient : AppCompatActivity() {
         dialog.show()
     }
 
-    fun dialogEditInfo(id: String, Name: String, Num: String ) {
+    fun dialogEditInfo(id: String, Name: String, Num: String) {
         val dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
@@ -256,15 +235,60 @@ class ProfileClient : AppCompatActivity() {
         dialog.findViewById<ImageView>(R.id.close_dialog).setOnClickListener {
             dialog.dismiss()
         }
-        dialog.findViewById<TextView>(R.id.edit_user_name).text = Name
-        dialog.findViewById<TextView>(R.id.edit_user_phone).text = Num
-        dialog.findViewById<TextView>(R.id.edit_user_address).text = tv_address.text
-        dialog.findViewById<TextView>(R.id.edit_user_desc).text = tv_disc.text
+
+        val name = dialog.findViewById<TextView>(R.id.edit_user_name)
+        name.text = Name
+        val number = dialog.findViewById<TextView>(R.id.edit_user_phone)
+        number.text = Num
+        val address = dialog.findViewById<TextView>(R.id.edit_user_address)
+        address.text = tv_address.text.toString()
+        val desc = dialog.findViewById<TextView>(R.id.edit_user_desc)
+        desc.text = tv_disc.text.toString()
 
 
+        dialog.findViewById<ImageView>(R.id.success).setOnClickListener {
+            dialog.dismiss()
+            val UserNewInfo = HashMap<String, Any>()
+
+            UserNewInfo.put("Name", name.text.toString())
+            UserNewInfo.put("PhoneNumber", number.text.toString())
+            UserNewInfo.put("Address", address.text.toString())
+            UserNewInfo.put("Description", desc.text.toString())
+
+            Docu.document("USER_$id").update(UserNewInfo)
+                    .addOnCompleteListener {
+                        if (it.isSuccessful) {
+                            SweetAlert().sweetAlertDialog(this, "Updated Successfully",
+                                    "Client info was updated successfully",
+                                    SweetAlertDialog.SUCCESS_TYPE, "Ok")
+                                    .setConfirmButton("Ok") {
+                                        it.dismiss()
+
+                                    }.show()
+                        } else {
+                            SweetAlert().sweetAlertDialog(this, "Error cannot Update info",
+                                    "Error\nClient info was not updated\n${it.result}",
+                                    SweetAlertDialog.ERROR_TYPE, "Ok")
+                                    .setConfirmButton("Ok") {
+                                        it.dismiss()
+
+                                    }.show()
+                        }
+
+                    }.addOnFailureListener {
+                        SweetAlert().sweetAlertDialog(this, "Error cannot Update info",
+                                "Error\nClient info was not updated\n${it.message}",
+                                SweetAlertDialog.ERROR_TYPE, "Ok")
+                                .setConfirmButton("Ok") {
+                                    it.dismiss()
+                                    dialog.dismiss()
+                                }
+                    }
+        }
 
         dialog.show()
     }
+
 
     fun dialogImageShow(image: Uri?) {
         try {
@@ -280,7 +304,6 @@ class ProfileClient : AppCompatActivity() {
             } else {
                 Picasso.get().load(R.drawable.loading_profile).into(imageShow)
             }
-
 
             dialog.show()
         } catch (e: Exception) {
@@ -305,8 +328,10 @@ class ProfileClient : AppCompatActivity() {
         try {
             val file_path2 = "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)}/CellManager"
             val dir = File(file_path2)
+
             if (!dir.exists())
                 dir.mkdirs()
+
             val file = File(dir, "USER_$id.jpeg")
             val fOut = FileOutputStream(file)
 
@@ -379,5 +404,40 @@ class ProfileClient : AppCompatActivity() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        MyList.clear()
+
+        val id = intent.extras.getString("ID")
+        val name = intent.extras.getString("Name")
+
+        Docu.document("USER_$id").collection("Products").get()
+                .addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        for (doc in it.result!!) {
+                            val companyName = doc.get("CompanyName")
+                            val CountPayments = doc.get("CountPayments")
+                            val FirstPayment = doc.get("FirstPayment")
+                            val ProductName = doc.get("ProductName")
+                            val ProductPrice = doc.get("ProductPrice")
+                            val date = doc.get("ProductDate")
+                            val time = doc.get("ProductTime")
+                            MyList.add(products(companyName.toString(), CountPayments.toString(), FirstPayment.toString()
+                                    , ProductName.toString(), ProductPrice.toString(), date.toString(), time.toString()))
+                        }
+
+                        recy_pro.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
+                        val adapter = AdapterOfProducts(this, MyList, id, name)
+                        recy_pro.adapter = adapter
+                        if (!MyList.isEmpty()) {
+                            recy_pro.visibility = View.VISIBLE
+                        }
+                    }
+
+                }
+                .addOnFailureListener {
+                    Toast.makeText(this, "ERROR : ${it.message}", Toast.LENGTH_LONG).show()
+                }
+    }
 
 }

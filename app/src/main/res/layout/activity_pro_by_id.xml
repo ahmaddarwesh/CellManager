@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/blue"
+    android:background="@color/gray_btn_bg_color"
     tools:context=".ProById">
 
     <android.support.v7.widget.RecyclerView
@@ -60,4 +60,14 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/searchnot2" />
     </android.support.constraint.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/needHelp_pro_by_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/need_help" />
 </android.support.constraint.ConstraintLayout>

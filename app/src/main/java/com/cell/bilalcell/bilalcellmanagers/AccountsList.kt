@@ -23,6 +23,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
 import maes.tech.intentanim.CustomIntent
 import cn.pedant.SweetAlert.SweetAlertDialog
+import com.google.firebase.firestore.Query
 import com.squareup.picasso.Callback
 import java.lang.Exception
 
@@ -72,6 +73,7 @@ class AccountsList : AppCompatActivity() {
         })
 
         search_client.setOnClickListener {
+
             filtering(name_search.text.toString())
         }
 
@@ -129,6 +131,7 @@ class AccountsList : AppCompatActivity() {
             holder.ID.text = list.id
             holder.number.text = list.mobile
             holder.more.setOnClickListener {
+
                 if (t == 0) {
                     context.startActivity(Intent(context, ProfileClient::class.java).putExtra("ID", list.id.toString())
                             .putExtra("Name", list.username)
@@ -187,7 +190,7 @@ class AccountsList : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         list.clear()
-        UsersD.orderBy("ID").limit(10).get().addOnCompleteListener {
+        UsersD.orderBy("ID", Query.Direction.DESCENDING).limit(10).get().addOnCompleteListener {
             if (it.isSuccessful) {
                 for (document in it.result!!) {
                     val name = document.get("Name")
@@ -235,7 +238,7 @@ class AccountsList : AppCompatActivity() {
             startActivity(Intent(this, ProfileClient::class.java).putExtra("ID", id)
                     .putExtra("Name", Name)
                     .putExtra("Number", Num))
-            CustomIntent.customType(this , "up-to-bottom")
+            CustomIntent.customType(this, "up-to-bottom")
 
         }
 

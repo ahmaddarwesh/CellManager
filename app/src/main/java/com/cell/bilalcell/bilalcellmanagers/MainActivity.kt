@@ -9,7 +9,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import com.google.firebase.auth.FirebaseAuth
 import android.widget.Toast
 import cn.pedant.SweetAlert.SweetAlertDialog
-import com.google.firebase.auth.FirebaseUser
 
 
 class MainActivity : AppCompatActivity() {
@@ -29,6 +28,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         btnLogin.setOnClickListener {
+
             CheckLogin()
         }
     }

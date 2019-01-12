@@ -20,7 +20,7 @@ class splashScreen : AppCompatActivity() {
         try {
             object : Thread() {
                 override fun run() {
-                    Thread.sleep(500)
+                    Thread.sleep(1000)
                     runOnUiThread {
                         if (mAuth!!.currentUser != null) {
                             startActivity(Intent(this@splashScreen, HomeActivity::class.java))

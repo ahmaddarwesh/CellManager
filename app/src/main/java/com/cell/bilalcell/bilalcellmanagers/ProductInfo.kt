@@ -85,11 +85,10 @@ class ProductInfo : AppCompatActivity() {
 
 
         tv_pro_client.setOnClickListener {
-
-        }
+         }
 
         add_payment.setOnClickListener {
-            DialogAddPay(intent.extras.getString("prod_name"), IdProd, idUser)
+             DialogAddPay(intent.extras.getString("prod_name"), IdProd, idUser)
         }
 
 
@@ -157,7 +156,7 @@ class ProductInfo : AppCompatActivity() {
         edit_product.text = name
 
         img_cancel.setOnClickListener {
-            if (cash.text.trim().isEmpty() || description.text.trim().isEmpty()) {
+             if (cash.text.trim().isEmpty() || description.text.trim().isEmpty()) {
                 dialog.dismiss()
             } else {
                 SweetAlert().sweetAlertConf(this, "Discard info!", "Are you sure discard information you typed?",
@@ -173,7 +172,7 @@ class ProductInfo : AppCompatActivity() {
         }
 
         text_type.setOnClickListener {
-            if (typeC1.equals(0)) {
+             if (typeC1.equals(0)) {
                 text_type.text = "L.L"
                 typeC1 = 1
             } else {
@@ -194,9 +193,7 @@ class ProductInfo : AppCompatActivity() {
                 }
 
         addBtn.setOnClickListener {
-
-
-            val payment = HashMap<String, Any>()
+             val payment = HashMap<String, Any>()
             payment.put("PayCash", cash.text.toString() + text_type.text)
             payment.put("PayDescription", description.text.toString())
             payment.put("PaymentDate", DateNow())

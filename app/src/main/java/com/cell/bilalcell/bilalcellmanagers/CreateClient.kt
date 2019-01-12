@@ -7,12 +7,10 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
-import android.support.v7.app.AlertDialog
 import android.view.Window
 import android.widget.ImageView
 import kotlinx.android.synthetic.main.activity_create_client.*
 import cn.pedant.SweetAlert.SweetAlertDialog
-import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.database.*
 import com.google.firebase.firestore.FirebaseFirestore
@@ -73,14 +71,13 @@ class CreateClient : AppCompatActivity() {
         })
 
         profile_info_image.setOnClickListener {
-            showDialog(this)
+             showDialog(this)
         }
 
 
 
         imgSuccess.setOnClickListener { it ->
-
-            if (edt_fullname.text.trim().isEmpty() || edt_phonenumber.text.trim().isEmpty()
+             if (edt_fullname.text.trim().isEmpty() || edt_phonenumber.text.trim().isEmpty()
                     || edt_address.text.trim().isEmpty() || desc.text.trim().isEmpty()) {
                 SweetAlert().sweetAlertDialog(this,"Field Required!",
                         "You cannot leave field empty.\nCompletion info to continue",

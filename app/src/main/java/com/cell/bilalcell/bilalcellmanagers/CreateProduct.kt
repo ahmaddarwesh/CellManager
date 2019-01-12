@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.Toast
 import cn.pedant.SweetAlert.SweetAlertDialog
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_create_product.*
 import maes.tech.intentanim.CustomIntent
@@ -25,6 +26,7 @@ class CreateProduct : AppCompatActivity() {
     var typeC1 = 0
     var typeC2 = 0
 
+    private var realTime = FirebaseDatabase.getInstance()
     val db = FirebaseFirestore.getInstance()
     val Users = db.collection("Users")
 
@@ -47,6 +49,7 @@ class CreateProduct : AppCompatActivity() {
             sandbar.duration = 1500
             sandbar.show()
         }
+
 
 //get Count Product of user
         Users.document("USER_$id").get()
@@ -72,10 +75,14 @@ class CreateProduct : AppCompatActivity() {
                 val conuntryitem: CompanyItems = parent!!.getItemAtPosition(position) as CompanyItems
                 val name = conuntryitem.Name
                 if (name != "Select!") {
-                    lay_info_product.visibility = View.VISIBLE
+                    name_of_pro.isEnabled = true
+                    price_of_pro.isEnabled = true
+                    first_pay.isEnabled = true
                     name_of_com = name
                 } else {
-                    lay_info_product.visibility = View.GONE
+                    name_of_pro.isEnabled = false
+                    price_of_pro.isEnabled = false
+                    first_pay.isEnabled = false
                 }
             }
 
@@ -129,7 +136,7 @@ class CreateProduct : AppCompatActivity() {
                 Product.put("ProductDate", date)
                 Product.put("CountPayments", 1)
                 Product.put("ProductTime", t)
-                Product.put("ID",countP)
+                Product.put("ID", countP)
 
 
                 val payment = HashMap<String, Any>()
@@ -161,6 +168,7 @@ class CreateProduct : AppCompatActivity() {
                                     finish()
                                 }.show()
 
+                                Products.document()
                             }
                             .addOnFailureListener { it3 ->
                                 SweetAlert().sweetAlertDialog(this, "Fail", "Error : ${it3.message}", SweetAlertDialog.ERROR_TYPE,
