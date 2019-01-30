@@ -5,21 +5,22 @@ import cn.pedant.SweetAlert.SweetAlertDialog
 
 public class SweetAlert {
 
-    fun sweetAlertDialog(conx:Context,Title: String, Content: String, Type: Int, ConfermText: String): SweetAlertDialog {
-        val s = SweetAlertDialog(conx, Type)
-        s.titleText = Title
-        s.contentText = Content
-        s.confirmText = ConfermText
-
-        return s
+    fun sweetAlertDialog(conx: Context, Title: String, Content: String, Type: Int, ConfermText: String): SweetAlertDialog {
+        val sweet = SweetAlertDialog(conx, Type)
+        sweet.titleText = Title
+        sweet.contentText = Content
+        sweet.confirmText = ConfermText
+        return sweet
     }
 
-      fun sweetAlertConf(conx:Context,Title: String, Content: String, Type: Int, ConfermText: String, cancelText: String): SweetAlertDialog {
-        val s = SweetAlertDialog(conx, Type)
-        s.titleText = Title
-        s.contentText = Content
-        s.confirmText = ConfermText
-        s.cancelText = cancelText
-        return s
+
+
+    fun sweetAlertConf(conx: Context, Title: String, Content: String, Type: Int, ConfermText: String, cancelText: String): SweetAlertDialog {
+        val sweet = SweetAlertDialog(conx, Type)
+        sweet.titleText = Title
+        sweet.contentText = Content
+        sweet.confirmText = ConfermText
+        sweet.cancelText = cancelText
+        return sweet
     }
 }

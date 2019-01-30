@@ -7,14 +7,10 @@ import android.media.MediaPlayer
 class EffectSound {
 
     companion object {
-
         fun touchplay(conx: Context) {
-            val mPlayer =  MediaPlayer.create(conx, R.raw.touch)
+            val mPlayer = MediaPlayer.create(conx, R.raw.touch)
             mPlayer.start()
         }
-
-
     }
-
 
 }

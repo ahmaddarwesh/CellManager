@@ -104,7 +104,7 @@ class HomeActivity : AppCompatActivity() {
 
         Servises_Sim.setOnClickListener {
             EffectSound.touchplay(this)
-            startActivity(Intent(this, SimServices::class.java))
+            startActivity(Intent(this, SimServices::class.java).putExtra("id",0))
             CustomIntent.customType(this, "fadein-to-fadeout")
         }
         Servises_Sim.setOnLongClickListener {
@@ -117,9 +117,10 @@ class HomeActivity : AppCompatActivity() {
 
         searchProduct.setOnClickListener {
             EffectSound.touchplay(this)
+            startActivity(Intent(this,SimServices::class.java).putExtra("id",1))
         }
         searchProduct.setOnLongClickListener {
-            val n = Toast.makeText(this@HomeActivity,"All Products",Toast.LENGTH_SHORT)
+            val n = Toast.makeText(this@HomeActivity,"Add notes",Toast.LENGTH_SHORT)
             n.setGravity(Gravity.TOP,0,0)
 
             n.show()

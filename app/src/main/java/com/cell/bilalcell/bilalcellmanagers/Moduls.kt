@@ -19,7 +19,6 @@ data class products(var CompanyName: String,
                     var time: String)
 
 
-
 data class services(var image: Int,
                     var name: String,
                     var type_serv: String,
@@ -33,8 +32,9 @@ data class services(var image: Int,
                     var val_send_to: String)
 
 
-
 data class Payment(var cash: String,
                    var desc: String,
                    var date: String,
                    var time: String)
+
+data class Note(var title: String, var date: String,var id:String)

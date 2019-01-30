@@ -5,7 +5,7 @@
     android:id="@+id/con_al"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gray_btn_bg_pressed_color"
+    android:background="@drawable/blue"
     tools:context="com.cell.bilalcell.bilalcellmanagers.AccountsList">
 
     <ProgressBar

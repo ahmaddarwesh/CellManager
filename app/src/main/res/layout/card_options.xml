@@ -62,7 +62,7 @@
                 android:layout_weight="1"
                 android:padding="2dp"
                 android:text="Edit client info"
-                android:textColor="@color/greenDark"
+                android:textColor="@color/common_google_signin_btn_text_dark_focused"
                 android:textSize="18sp" />
 
         </LinearLayout>
@@ -125,7 +125,7 @@
                 android:layout_weight="1"
                 android:padding="2dp"
                 android:text="Share info"
-                android:textColor="@color/Primary2"
+                android:textColor="@color/common_google_signin_btn_text_dark_focused"
                 android:textSize="18sp" />
         </LinearLayout>
     </LinearLayout>
