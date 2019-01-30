@@ -14,7 +14,6 @@ import android.widget.*
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_sim_services.*
 import maes.tech.intentanim.CustomIntent
-import org.w3c.dom.Text
 import java.util.ArrayList
 
 
@@ -69,15 +68,10 @@ class SimServices : AppCompatActivity() {
             floatingActionButton.visibility = View.VISIBLE
             spinner2.visibility = View.GONE
 
-            initNotes()
-
-
-
-
         }
 
         floatingActionButton.setOnClickListener {
-            startActivity(Intent(this, Notes::class.java).putExtra("ID",0))
+            startActivity(Intent(this, Notes::class.java).putExtra("ID", 0))
 
         }
 
@@ -141,7 +135,7 @@ class SimServices : AppCompatActivity() {
             holder.date.text = mylist.date
             holder.id.text = mylist.id
             holder.card.setOnClickListener {
-                startActivity(Intent(conx, Notes::class.java).putExtra("ID",1).putExtra("idNote",mylist.id))
+                startActivity(Intent(conx, Notes::class.java).putExtra("ID", 1).putExtra("idNote", mylist.id))
 
             }
         }
@@ -190,13 +184,16 @@ class SimServices : AppCompatActivity() {
     }
 
     fun initNotes() {
+
+        arrNotes.clear()
+
         NoteD.get().addOnCompleteListener {
             if (it.isSuccessful) {
                 for (douc in it.result!!) {
                     val title = douc.get("TITLE")
                     val date = douc.get("DATE")
                     val id = douc.get("ID")
-                    arrNotes.add(Note(title.toString(), date.toString(),id.toString()))
+                    arrNotes.add(Note(title.toString(), date.toString(), id.toString()))
                 }
                 recyServices.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
                 recyServices.adapter = AdapterNotes(arrNotes, this)
@@ -210,11 +207,18 @@ class SimServices : AppCompatActivity() {
                 }
 
             } else {
-                Toast.makeText(this,"Error ${it.result.toString()}",Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Error ${it.result.toString()}", Toast.LENGTH_LONG).show()
             }
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        if(intent.extras.getInt("id") != 0){
+            initNotes()
+        }
+
+    }
     override fun finish() {
         super.finish()
         CustomIntent.customType(this, "fadein-to-fadeout")

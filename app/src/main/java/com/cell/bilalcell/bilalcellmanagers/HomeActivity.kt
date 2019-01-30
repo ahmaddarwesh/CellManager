@@ -14,6 +14,7 @@ import android.support.v4.content.ContextCompat
 import android.view.Gravity
 import android.widget.Toast
 import cn.pedant.SweetAlert.SweetAlertDialog
+import com.google.firebase.FirebaseApp
 import kotlinx.android.synthetic.main.activity_home.*
 import com.google.firebase.auth.FirebaseAuth
 import maes.tech.intentanim.CustomIntent
@@ -25,6 +26,8 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+
+        FirebaseApp.initializeApp(this)
         mAuth = FirebaseAuth.getInstance()
 
 

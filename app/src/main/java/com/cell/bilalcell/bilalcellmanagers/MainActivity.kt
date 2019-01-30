@@ -9,6 +9,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import com.google.firebase.auth.FirebaseAuth
 import android.widget.Toast
 import cn.pedant.SweetAlert.SweetAlertDialog
+import com.google.firebase.FirebaseApp
 
 
 class MainActivity : AppCompatActivity() {
@@ -20,6 +21,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        FirebaseApp.initializeApp(this);
         mAuth = FirebaseAuth.getInstance()
 
         if (mAuth!!.currentUser != null) {

@@ -30,6 +30,7 @@ import java.lang.Exception
 
 class AccountsList : AppCompatActivity() {
 
+
     private var db = FirebaseFirestore.getInstance()
     private var UsersD = db.collection("Users")
     private val list = ArrayList<clients>()
