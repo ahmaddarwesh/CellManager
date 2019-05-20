@@ -3,17 +3,16 @@ package com.cell.bilalcell.bilalcellmanagers
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import kotlinx.android.synthetic.main.activity_main.*
-import com.google.firebase.auth.FirebaseAuth
+import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity() {
-
 
     private var mAuth: FirebaseAuth? = null
 
@@ -21,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        FirebaseApp.initializeApp(this);
+        FirebaseApp.initializeApp(this)
         mAuth = FirebaseAuth.getInstance()
 
         if (mAuth!!.currentUser != null) {
@@ -39,19 +38,18 @@ class MainActivity : AppCompatActivity() {
         mAuth = FirebaseAuth.getInstance()
 
 
-        if(edt_username.text.isEmpty() || edt_password.text.isEmpty()){
-            SweetAlert().sweetAlertDialog(this,"Field Empty!",
+        if (edt_username.text.isEmpty() || edt_password.text!!.isEmpty()) {
+            SweetAlert().sweetAlertDialog(this, "Field Empty!",
                     "Do not leave any field empty to continue!!",
                     SweetAlertDialog.ERROR_TYPE,
                     "Ok").setConfirmButton("Ok") {
                 it.dismiss()
             }.show()
-        }
-        else{
+        } else {
             val email = edt_username.text.toString()
             val password = edt_password.text.toString()
             if (!isOnline()) {
-                SweetAlert().sweetAlertDialog(this,"Error",
+                SweetAlert().sweetAlertDialog(this, "Error",
                         "Please Check your Internet Connection!",
                         SweetAlertDialog.ERROR_TYPE,
                         "Ok").setConfirmButton("Ok") {
@@ -72,7 +70,7 @@ class MainActivity : AppCompatActivity() {
                                 // If sign in fails, display a message to the user.
                                 Toast.makeText(this@MainActivity, "Authentication failed.",
                                         Toast.LENGTH_SHORT).show()
-                                SweetAlert().sweetAlertDialog(this,"Authentication failed",
+                                SweetAlert().sweetAlertDialog(this, "Authentication failed",
                                         "Please check Email or Password and try again. \n ${task.result}",
                                         SweetAlertDialog.ERROR_TYPE,
                                         "Ok").setConfirmButton("Ok") {
@@ -85,7 +83,7 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
-        
+
 
     }
 

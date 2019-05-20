@@ -2,8 +2,8 @@ package com.cell.bilalcell.bilalcellmanagers
 
 import android.content.Context
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.CardView
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -14,7 +14,7 @@ import android.widget.*
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_sim_services.*
 import maes.tech.intentanim.CustomIntent
-import java.util.ArrayList
+import java.util.*
 
 
 class SimServices : AppCompatActivity() {
@@ -151,28 +151,60 @@ class SimServices : AppCompatActivity() {
     }
 
     fun alfa_init(arr: ArrayList<services>) {
-        arr.add(services(R.drawable.alfa, "ALFA", "internet", "10$", "MB", "500", "Month", "1", "NO", "Mi500", "1050"))
-        arr.add(services(R.drawable.alfa, "ALFA", "internet", "17$", "GB", "1.5", "Month", "1", "NO", "Mi1.5", "1050"))
-        arr.add(services(R.drawable.alfa, "ALFA", "internet", "23$", "GB", "5", "Month", "1", "NO", "Mi5", "1050"))
-        arr.add(services(R.drawable.alfa, "ALFA", "internet", "23$", "GB", "5", "Month", "1", "NO", "Mi5", "1050"))
-        arr.add(services(R.drawable.alfa, "ALFA", "internet", "23$", "GB", "5", "Month", "1", "NO", "Mi5", "1050"))
-        arr.add(services(R.drawable.alfa, "ALFA", "internet", "23$", "GB", "5", "Month", "1", "NO", "Mi5", "1050"))
-        arr.add(services(R.drawable.alfa, "ALFA", "internet", "23$", "GB", "5", "Month", "1", "NO", "Mi5", "1050"))
-        arr.add(services(R.drawable.alfa, "ALFA", "internet", "23$", "GB", "5", "Month", "1", "NO", "Mi5", "1050"))
-        arr.add(services(R.drawable.alfa, "ALFA", "internet", "23$", "GB", "5", "Month", "1", "NO", "Mi5", "1050"))
+        arr.add(services(R.drawable.alfa, "ALFA", "Internet", "1$", "MB", "50", "Days", "1", "NO", "D1 ", "1050"))
+        arr.add(services(R.drawable.alfa, "ALFA", "Internet", "3$", "MB", "600", "Days", "3", "NO", "D3 ", "1050"))
+        arr.add(services(R.drawable.alfa, "ALFA", "Internet", "5$", "TB", "NoLimit", "Hours", "2", "NO", "D5", "1050"))
+
+        arr.add(services(R.drawable.alfa, "ALFA", "Internet", "5$", "MB", "500", "Days", "7", "NO", "WDB500", "1050"))
+        arr.add(services(R.drawable.alfa, "ALFA", "Internet", "7$", "GB", "1.5", "Days", "7", "NO", "WDB1.5", "1050"))
+        arr.add(services(R.drawable.alfa, "ALFA", "Internet", "15$", "GB", "5", "Days", "7", "NO", "WDB5", "1050"))
+
+        arr.add(services(R.drawable.alfa, "ALFA", "WhatsApp", "5$", "MB", "300", "Month", "1", "Yes", "WA300", "1050"))
+        arr.add(services(R.drawable.alfa, "ALFA", "Internet", "10$", "MB", "500", "Month", "1", "NO", "MI500", "1050"))
+        arr.add(services(R.drawable.alfa, "ALFA", "Internet", "17$", "GB", "1.5", "Month", "1", "NO", "MI1.5", "1050"))
+        arr.add(services(R.drawable.alfa, "ALFA", "Internet", "23$", "GB", "5", "Month", "1", "NO", "MI5", "1050"))
+        arr.add(services(R.drawable.alfa, "ALFA", "Internet", "30$", "GB", "10", "Month", "1", "NO", "MI10", "1050"))
+        arr.add(services(R.drawable.alfa, "ALFA", "Internet", "45$", "GB", "20", "Month", "1", "NO", "MI20", "1050"))
+        arr.add(services(R.drawable.alfa, "ALFA", "Internet", "56$", "GB", "25", "Month", "1", "NO", "MI25", "1050"))
+        arr.add(services(R.drawable.alfa, "ALFA", "Internet", "67$", "GB", "30", "Month", "1", "NO", "MI30", "1050"))
+        arr.add(services(R.drawable.alfa, "ALFA", "Internet", "80$", "GB", "40", "Month", "1", "NO", "MI40", "1050"))
+        arr.add(services(R.drawable.alfa, "ALFA", "Internet", "100$", "GB", "50", "Month", "1", "NO", "MI50", "1050"))
+        arr.add(services(R.drawable.alfa, "ALFA", "Internet", "112$", "GB", "70", "Month", "1", "NO", "MI70", "1050"))
+        arr.add(services(R.drawable.alfa, "ALFA", "Internet", "130$", "GB", "100", "Month", "1", "NO", "MI100", "1050"))
+        arr.add(services(R.drawable.alfa, "ALFA", "Internet", "230$", "GB", "200", "Month", "1", "NO", "MI200", "1050"))
+
+        arr.add(services(R.drawable.alfa, "ALFA", "Internet", "59$", "GB", "20", "Month", "2", "NO", "2MI20", "1050"))
+        arr.add(services(R.drawable.alfa, "ALFA", "Internet", "66$", "GB", "25", "Month", "2", "NO", "2MI25", "1050"))
+        arr.add(services(R.drawable.alfa, "ALFA", "Internet", "72$", "GB", "30", "Month", "2", "NO", "2MI30", "1050"))
+        arr.add(services(R.drawable.alfa, "ALFA", "Internet", "84$", "GB", "40", "Month", "2", "NO", "2MI40", "1050"))
+        arr.add(services(R.drawable.alfa, "ALFA", "Internet", "102$", "GB", "50", "Month", "2", "NO", "2MI50", "1050"))
+
+        arr.add(services(R.drawable.alfa, "ALFA", "Internet", "139$", "GB", "70", "Month", "3", "NO", "3MI70", "1050"))
+        arr.add(services(R.drawable.alfa, "ALFA", "Internet", "179$", "GB", "100", "Month", "3", "NO", "3MI100", "1050"))
+        arr.add(services(R.drawable.alfa, "ALFA", "Internet", "259$", "GB", "200", "Month", "3", "NO", "3MI200", "1050"))
+
+
     }
 
     fun mtc_init(arr: ArrayList<services>) {
+        arr.add(services(R.drawable.touch, "MTC (touch)", "WhatsApp", "4$", "MB", "200", "Month", "1", "YES", "Wa", "1100"))
+        arr.add(services(R.drawable.touch, "MTC (touch)", "WhatsApp", "6$", "MB", "300", "Month", "1", "YES", "Wa2", "1100"))
+
+        arr.add(services(R.drawable.touch, "MTC (touch)", "internet", "1$", "MB", "50", "Days", "1", "NO", "DD", "1188"))
+        arr.add(services(R.drawable.touch, "MTC (touch)", "internet", "2$", "MB", "200", "Days", "2", "NO", "DD2", "1188"))
+        arr.add(services(R.drawable.touch, "MTC (touch)", "internet", "4$", "MB", "700", "Days", "4", "NO", "DD4", "1188"))
+        arr.add(services(R.drawable.touch, "MTC (touch)", "internet", "7$", "GB", "1", "Days", "7", "NO", "WD", "1188"))
+        arr.add(services(R.drawable.touch, "MTC (touch)", "Voice call", "2$", "Minutes", "60", "Days", "2", "NO", "2DV", "1188"))
+        arr.add(services(R.drawable.touch, "MTC (touch)", "Social Data", "7$", "MB", "300", "Month", "1", "YES", "S", "1100"))
+
         arr.add(services(R.drawable.touch, "MTC (touch)", "internet", "10$", "MB", "500", "Month", "1", "NO", "Hs1", "1188"))
         arr.add(services(R.drawable.touch, "MTC (touch)", "internet", "19$", "GB", "1.75", "Month", "1", "YES", "Hs2", "1188"))
         arr.add(services(R.drawable.touch, "MTC (touch)", "internet", "26$", "GB", "6", "Month", "1", "NO", "Hs3", "1188"))
-        arr.add(services(R.drawable.touch, "MTC (touch)", "internet", "26$", "GB", "6", "Month", "1", "NO", "Hs3", "1188"))
-        arr.add(services(R.drawable.touch, "MTC (touch)", "internet", "26$", "GB", "6", "Month", "1", "NO", "Hs3", "1188"))
-        arr.add(services(R.drawable.touch, "MTC (touch)", "internet", "26$", "GB", "6", "Month", "1", "NO", "Hs3", "1188"))
-        arr.add(services(R.drawable.touch, "MTC (touch)", "internet", "26$", "GB", "6", "Month", "1", "NO", "Hs3", "1188"))
-        arr.add(services(R.drawable.touch, "MTC (touch)", "internet", "26$", "GB", "6", "Month", "1", "NO", "Hs3", "1188"))
-        arr.add(services(R.drawable.touch, "MTC (touch)", "internet", "26$", "GB", "6", "Month", "1", "NO", "Hs3", "1188"))
-        arr.add(services(R.drawable.touch, "MTC (touch)", "internet", "26$", "GB", "6", "Month", "1", "NO", "Hs3", "1188"))
+        arr.add(services(R.drawable.touch, "MTC (touch)", "internet", "39$", "GB", "10", "Month", "1", "NO", "Hs4", "1188"))
+        arr.add(services(R.drawable.touch, "MTC (touch)", "internet", "59$", "GB", "20", "Month", "1", "NO", "Hs5", "1188"))
+        arr.add(services(R.drawable.touch, "MTC (touch)", "internet", "79$", "GB", "30", "Month", "1", "NO", "Hs6", "1188"))
+        arr.add(services(R.drawable.touch, "MTC (touch)", "internet", "99$", "GB", "40", "Month", "1", "NO", "Hs7", "1188"))
+        arr.add(services(R.drawable.touch, "MTC (touch)", "internet", "119$", "GB", "60", "Month", "1", "NO", "Hs8", "1188"))
 
     }
 
@@ -214,11 +246,12 @@ class SimServices : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        if(intent.extras.getInt("id") != 0){
+        if (intent.extras.getInt("id") != 0) {
             initNotes()
         }
 
     }
+
     override fun finish() {
         super.finish()
         CustomIntent.customType(this, "fadein-to-fadeout")

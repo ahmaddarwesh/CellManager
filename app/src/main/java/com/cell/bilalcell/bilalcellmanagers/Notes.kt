@@ -71,7 +71,10 @@ class Notes : AppCompatActivity() {
 
                 db.collection("Notes").document("note$id").set(myData)
                         .addOnCompleteListener {
-                            SweetAlert().sweetAlertDialog(this, "Done", "Successfully added", SweetAlertDialog.SUCCESS_TYPE, "OK")
+
+
+                            SweetAlert().sweetAlertDialog(this, "Done", "Successfully added",
+                                    SweetAlertDialog.SUCCESS_TYPE, "OK")
                                     .setConfirmButton("OK") {
                                         it.dismiss()
                                         Cookies().SaveInt(this, "ID", id + 1)
@@ -102,6 +105,7 @@ class Notes : AppCompatActivity() {
                             it.dismiss()
                             NoteD.document("note$idNote").delete()
                                     .addOnCompleteListener {
+
                                         SweetAlert().sweetAlertDialog(this, "Deleted", "The note was successfully deleted",
                                                 SweetAlertDialog.SUCCESS_TYPE, "OK")
                                                 .setConfirmButton("OK") {

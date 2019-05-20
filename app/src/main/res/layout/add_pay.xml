@@ -2,21 +2,21 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="320dp"
     android:layout_height="wrap_content"
     android:background="@drawable/common_google_signin_btn_icon_dark_normal_background">
 
     <android.support.constraint.ConstraintLayout
-        android:layout_width="340dp"
+        android:layout_width="0dp"
         android:layout_height="342dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        android:focusable="true"
-        android:focusableInTouchMode="true">
+        app:layout_constraintVertical_bias="0.0">
 
         <TextView
             android:id="@+id/textView21"
@@ -33,10 +33,10 @@
 
         <EditText
             android:id="@+id/cash"
-            android:layout_width="281dp"
+            android:layout_width="0dp"
             android:layout_height="54dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="20dp"
             android:layout_marginEnd="8dp"
             android:background="@drawable/tf_new"
             android:drawablePadding="10dp"
@@ -46,7 +46,7 @@
             android:padding="5dp"
             android:textColor="@color/greenDark"
             android:textSize="24sp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/text_type"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edit_product" />
@@ -90,17 +90,14 @@
             android:id="@+id/text_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="20dp"
             android:layout_marginEnd="16dp"
             android:padding="5dp"
             android:text="$"
             android:textColor="@color/material_blue_grey_95"
-            android:textSize="24sp"
+            android:textSize="30sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.652"
-            app:layout_constraintStart_toEndOf="@+id/cash"
             app:layout_constraintTop_toBottomOf="@+id/edit_product" />
 
         <ImageView
@@ -126,11 +123,13 @@
             android:id="@+id/add_btn"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginEnd="4dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginBottom="4dp"
             android:padding="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/desc"
             app:srcCompat="@drawable/image6" />
 
 

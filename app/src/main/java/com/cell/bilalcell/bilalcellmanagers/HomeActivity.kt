@@ -6,17 +6,17 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.ConnectivityManager
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import android.support.v7.app.AppCompatActivity
 import android.view.Gravity
 import android.widget.Toast
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.google.firebase.FirebaseApp
-import kotlinx.android.synthetic.main.activity_home.*
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.android.synthetic.main.activity_home.*
 import maes.tech.intentanim.CustomIntent
 
 
@@ -29,8 +29,6 @@ class HomeActivity : AppCompatActivity() {
 
         FirebaseApp.initializeApp(this)
         mAuth = FirebaseAuth.getInstance()
-
-
 
         if (!isOnline()) {
             val sandbar = Snackbar
@@ -48,111 +46,85 @@ class HomeActivity : AppCompatActivity() {
 
 
         addClient.setOnClickListener {
-            EffectSound.touchplay(this)
+
             startActivity(Intent(this, CreateClient::class.java))
             CustomIntent.customType(this, "fadein-to-fadeout")
         }
         addClient.setOnLongClickListener {
-            val n = Toast.makeText(this@HomeActivity,"Add new Client",Toast.LENGTH_SHORT)
-            n.setGravity(Gravity.TOP,0,0)
+            val n = Toast.makeText(this@HomeActivity, "Add new Client", Toast.LENGTH_SHORT)
+            n.setGravity(Gravity.TOP, 0, 0)
 
             n.show()
             false
         }
 
         addNews.setOnClickListener {
-            EffectSound.touchplay(this)
+
             startActivity(Intent(this@HomeActivity, AccountsList::class.java)
                     .putExtra("type", 1))
             CustomIntent.customType(this, "fadein-to-fadeout")
         }
 
         addNews.setOnLongClickListener {
-            val n = Toast.makeText(this@HomeActivity,"Add new Payment",Toast.LENGTH_SHORT)
-            n.setGravity(Gravity.TOP,0,0)
+            val n = Toast.makeText(this@HomeActivity, "Add new Payment", Toast.LENGTH_SHORT)
+            n.setGravity(Gravity.TOP, 0, 0)
 
             n.show()
             false
         }
 
         Clients.setOnClickListener {
-            EffectSound.touchplay(this)
+
             startActivity(Intent(this@HomeActivity, AccountsList::class.java)
                     .putExtra("type", 0))
             CustomIntent.customType(this, "fadein-to-fadeout")
         }
 
         Clients.setOnLongClickListener {
-            val n = Toast.makeText(this@HomeActivity,"Show All Clients",Toast.LENGTH_SHORT)
-            n.setGravity(Gravity.TOP,0,0)
+            val n = Toast.makeText(this@HomeActivity, "Show All Clients", Toast.LENGTH_SHORT)
+            n.setGravity(Gravity.TOP, 0, 0)
 
             n.show()
             false
         }
 
         imgSetting.setOnClickListener {
-            EffectSound.touchplay(this)
-//            mAuth!!.signOut()
-//            startActivity(Intent(this, MainActivity::class.java))
-//            finish()
-//            CustomIntent.customType(this, "fadein-to-fadeout")
+
+            startActivity(Intent(this, Settings::class.java))
+            CustomIntent.customType(this, "fadein-to-fadeout")
         }
         imgSetting.setOnLongClickListener {
-            val n = Toast.makeText(this@HomeActivity,"Settings",Toast.LENGTH_SHORT)
-            n.setGravity(Gravity.TOP,0,0)
-
+            val n = Toast.makeText(this@HomeActivity, "Settings", Toast.LENGTH_SHORT)
+            n.setGravity(Gravity.TOP, 0, 0)
             n.show()
             false
         }
 
         Servises_Sim.setOnClickListener {
-            EffectSound.touchplay(this)
-            startActivity(Intent(this, SimServices::class.java).putExtra("id",0))
+
+            startActivity(Intent(this, SimServices::class.java).putExtra("id", 0))
             CustomIntent.customType(this, "fadein-to-fadeout")
         }
         Servises_Sim.setOnLongClickListener {
-            val n = Toast.makeText(this@HomeActivity,"Services for sim card",Toast.LENGTH_SHORT)
-            n.setGravity(Gravity.TOP,0,0)
+            val n = Toast.makeText(this@HomeActivity, "Services for sim card", Toast.LENGTH_SHORT)
+            n.setGravity(Gravity.TOP, 0, 0)
 
             n.show()
             false
         }
 
         searchProduct.setOnClickListener {
-            EffectSound.touchplay(this)
-            startActivity(Intent(this,SimServices::class.java).putExtra("id",1))
+
+            startActivity(Intent(this, SimServices::class.java).putExtra("id", 1))
         }
         searchProduct.setOnLongClickListener {
-            val n = Toast.makeText(this@HomeActivity,"Add notes",Toast.LENGTH_SHORT)
-            n.setGravity(Gravity.TOP,0,0)
+            val n = Toast.makeText(this@HomeActivity, "Add notes", Toast.LENGTH_SHORT)
+            n.setGravity(Gravity.TOP, 0, 0)
 
             n.show()
             false
         }
 
-
-        imgStatistics.setOnClickListener {
-            EffectSound.touchplay(this)
-            println("img print ")
-        }
-        imgStatistics.setOnLongClickListener {
-            val n = Toast.makeText(this@HomeActivity,"Statistics Accounting",Toast.LENGTH_SHORT)
-            n.setGravity(Gravity.TOP,0,0)
-
-            n.show()
-            false
-        }
-
-        Pyment.setOnClickListener {
-            EffectSound.touchplay(this)
-        }
-        Pyment.setOnLongClickListener {
-            val n = Toast.makeText(this@HomeActivity,"All Payments",Toast.LENGTH_SHORT)
-            n.setGravity(Gravity.TOP,0,0)
-
-            n.show()
-            false
-        }
 
     }
 

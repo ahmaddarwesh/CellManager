@@ -29,7 +29,7 @@ public class ComAdapter extends ArrayAdapter<CompanyItems> {
         return initView(position, convertView, parent);
     }
 
-    public View initView(int position, View convertView, ViewGroup parent) {
+    private View initView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(
                     R.layout.company_spinner,

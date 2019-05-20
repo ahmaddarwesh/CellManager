@@ -90,14 +90,25 @@
 
         <ImageView
             android:id="@+id/add_payment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/backg_card"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/add_payment"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_pro_client"
-            app:srcCompat="@drawable/ic_add_black_24dp" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_pro_client" />
+
+        <ImageView
+            android:id="@+id/makeDone"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/add_payment"
+            app:srcCompat="@drawable/make_done" />
     </android.support.constraint.ConstraintLayout>
 
     <TextView
@@ -147,7 +158,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="5dp"
-        android:background="@drawable/blue"
+        android:background="@color/text_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

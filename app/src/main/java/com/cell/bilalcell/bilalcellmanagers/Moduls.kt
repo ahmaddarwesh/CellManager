@@ -5,18 +5,21 @@ data class CompanyItems(var Name: String,
                         var Logo: Int)
 
 
-data class clients(var id: String,
-                   var username: String,
-                   var mobile: String)
+data class Clients(var ID: Long,
+                   var Name: String,
+                   var PhoneNumber: String) {
+    constructor() : this(0, "", "")
+}
 
 
-data class products(var CompanyName: String,
+data class Products(var CompanyName: String,
                     var CountPayments: String,
                     var FirstPayment: String,
                     var ProductName: String,
                     var ProductPrice: String,
                     var Date: String,
-                    var time: String)
+                    var time: String,
+                    val isDone: String)
 
 
 data class services(var image: Int,
@@ -37,4 +40,13 @@ data class Payment(var cash: String,
                    var date: String,
                    var time: String)
 
-data class Note(var title: String, var date: String,var id:String)
+data class Note(var title: String,
+                var date: String,
+                var id: String)
+
+data class News(var id: Int,
+                var type: String,
+                var name: String,
+                var date: String,
+                var time: String,
+                var desc: String)

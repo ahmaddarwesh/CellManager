@@ -21,14 +21,15 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
+            android:background="#F8F7F6F6"
             android:fontFamily="sans-serif"
+            android:padding="10dp"
             android:text="Note 8 Full Package"
             android:textAlignment="center"
-            android:textColor="@color/sweet_dialog_bg_color_dark"
+            android:textColor="#424242"
             android:textSize="22sp"
-            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.503"
             app:layout_constraintStart_toStartOf="parent"
@@ -68,13 +69,23 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:text="25/9/2018"
-            android:textColor="@color/main_disabled_color"
+            android:textColor="#6B6A6A"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.501"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_name_product" />
+
+        <ImageView
+            android:id="@+id/img_done"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="8dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/done_stamp_png" />
 
     </android.support.constraint.ConstraintLayout>
 </android.support.constraint.ConstraintLayout>

@@ -3,8 +3,8 @@ package com.cell.bilalcell.bilalcellmanagers
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -19,6 +19,7 @@ import maes.tech.intentanim.CustomIntent
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 
 class ProductInfo : AppCompatActivity() {
@@ -27,17 +28,18 @@ class ProductInfo : AppCompatActivity() {
     private var db = FirebaseFirestore.getInstance()
     private var docs = db.collection("Users")
     private var listPay = ArrayList<Payment>()
-
+    private var IdProd = 0
+    private var idUser = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_product_info)
 
-        tv_pro_name.text = intent.extras.getString("prod_name")
-        tv_com_name.text = intent.extras.getString("com_name")
-        tv_pro_date.text = intent.extras.getString("prod_date")
-        val idUser = intent.extras.getString("IdUser")
-        val IdProd = intent.extras.getInt("IdProd")
-        tv_pro_client.text = intent.extras.getString("NameUser")
+        tv_pro_name.text = intent.extras!!.getString("prod_name")
+        tv_com_name.text = intent.extras!!.getString("com_name")
+        tv_pro_date.text = intent.extras!!.getString("prod_date")
+        idUser = intent.extras!!.getString("IdUser")!!
+        IdProd = intent.extras!!.getInt("IdProd")
+        tv_pro_client.text = intent.extras!!.getString("NameUser")
 
 
         docs.document("USER_$idUser").collection("Products").document("Product_$IdProd").get()
@@ -73,28 +75,56 @@ class ProductInfo : AppCompatActivity() {
                     val time = Pay.get("PaymentTime").toString()
                     listPay.add(Payment(cash, desc, date, time))
                 }
-                recy_payment.layoutManager = LinearLayoutManager(this,LinearLayout.VERTICAL,false)
-                recy_payment.adapter = AdapterPayments(this,listPay)
+                recy_payment.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
+                recy_payment.adapter = AdapterPayments(this, listPay)
                 count.text = listPay.size.toString()
             } else {
-                Toast.makeText(this,"Error Else \n${it.result}",Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Error \n${it.result}", Toast.LENGTH_LONG).show()
             }
         }.addOnFailureListener {
-            Toast.makeText(this,"Error Failur \n${it.message}",Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Error \n${it.message}", Toast.LENGTH_LONG).show()
         }
 
 
         tv_pro_client.setOnClickListener {
-         }
-
-        add_payment.setOnClickListener {
-             DialogAddPay(intent.extras.getString("prod_name"), IdProd, idUser)
         }
 
+        add_payment.setOnClickListener {
+            DialogAddPay("${tv_pro_name.text}", IdProd, idUser!!)
+        }
+
+        makeDone.setOnClickListener {
+            SweetAlert().sweetAlertConf(this, "Make product done",
+                    "Are you sure the ${tv_pro_name.text} is done?",
+                    SweetAlertDialog.WARNING_TYPE, "Yes Done",
+                    "Cancel")
+                    .setConfirmClickListener {
+                        makeItDone()
+                        it.dismissWithAnimation()
+                    }.setCancelClickListener {
+                        it.dismissWithAnimation()
+                    }.show()
+        }
 
     }
 
-    fun getPayments(idUser:String,IdProd:String){
+    private fun makeItDone() {
+        val map = HashMap<String, Any>()
+        map.put("IsDone", "1")
+        docs.document("USER_$idUser")
+                .collection("Products")
+                .document("Product_$IdProd").update(map)
+                .addOnSuccessListener {
+                    SweetAlert().sweetAlertDialog(this, "Done", "This Product will be \n marked as complete",
+                            SweetAlertDialog.SUCCESS_TYPE, "Done")
+                            .setConfirmClickListener {
+                                it.dismissWithAnimation()
+                                finish()
+                            }.show()
+                }
+    }
+
+    private fun getPayments(idUser: String, IdProd: String) {
         listPay.clear()
         docs.document("USER_$idUser").collection("Products").document("Product_$IdProd").collection("Payments").get().addOnCompleteListener {
             if (it.isSuccessful) {
@@ -105,33 +135,33 @@ class ProductInfo : AppCompatActivity() {
                     val time = Pay.get("PaymentTime").toString()
                     listPay.add(Payment(cash, desc, date, time))
                 }
-                recy_payment.layoutManager = LinearLayoutManager(this,LinearLayout.VERTICAL,false)
-                recy_payment.adapter = AdapterPayments(this,listPay)
+                recy_payment.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
+                recy_payment.adapter = AdapterPayments(this, listPay)
                 count.text = listPay.size.toString()
             } else {
-                Toast.makeText(this,"Error Else \n${it.result}",Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Error \n${it.result}", Toast.LENGTH_LONG).show()
             }
         }.addOnFailureListener {
-            Toast.makeText(this,"Error Failur \n${it.message}",Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Error \n${it.message}", Toast.LENGTH_LONG).show()
         }
 
     }
 
     @SuppressLint("SimpleDateFormat")
-    fun DateNow(): String {
+    private fun DateNow(): String {
         val formatter = SimpleDateFormat("dd/MM/yyyy")
         val date = Date()
         return formatter.format(date)
     }
 
     @SuppressLint("SimpleDateFormat")
-    fun TimeNow(): String {
+    private fun TimeNow(): String {
         val formatter = SimpleDateFormat("hh:mm")
         val date = Date()
         return formatter.format(date)
     }
 
-    fun DialogAddPay(name: String, pos: Int, idUser: String ) {
+    private fun DialogAddPay(name: String, pos: Int, idUser: String) {
         var typeC1 = 0
         val Products = db.collection("Users")
                 .document("USER_$idUser")
@@ -156,7 +186,7 @@ class ProductInfo : AppCompatActivity() {
         edit_product.text = name
 
         img_cancel.setOnClickListener {
-             if (cash.text.trim().isEmpty() || description.text.trim().isEmpty()) {
+            if (cash.text.trim().isEmpty() || description.text.trim().isEmpty()) {
                 dialog.dismiss()
             } else {
                 SweetAlert().sweetAlertConf(this, "Discard info!", "Are you sure discard information you typed?",
@@ -172,7 +202,7 @@ class ProductInfo : AppCompatActivity() {
         }
 
         text_type.setOnClickListener {
-             if (typeC1.equals(0)) {
+            if (typeC1.equals(0)) {
                 text_type.text = "L.L"
                 typeC1 = 1
             } else {
@@ -186,14 +216,14 @@ class ProductInfo : AppCompatActivity() {
                     if (it.isSuccessful) {
                         CountPay = it.result!!.getLong("CountPayments")!!.toLong() + 1
                     } else {
-                        Toast.makeText(this, "Error else ${it.result}", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this, "Error ${it.result}", Toast.LENGTH_LONG).show()
                     }
                 }.addOnFailureListener {
-                    Toast.makeText(this, "Error F ${it.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "Error ${it.message}", Toast.LENGTH_LONG).show()
                 }
 
         addBtn.setOnClickListener {
-             val payment = HashMap<String, Any>()
+            val payment = HashMap<String, Any>()
             payment.put("PayCash", cash.text.toString() + text_type.text)
             payment.put("PayDescription", description.text.toString())
             payment.put("PaymentDate", DateNow())
@@ -207,10 +237,11 @@ class ProductInfo : AppCompatActivity() {
                         .addOnSuccessListener {
                             Products.document("Product_$pos").update("CountPayments", CountPay)
                             dialog.dismiss()
+
                             SweetAlert().sweetAlertDialog(this, "Added Successfully", "Success the add payment to $name Phone", SweetAlertDialog.SUCCESS_TYPE,
                                     "Ok").setConfirmButton("Ok") {
                                 it.dismiss()
-                                getPayments(idUser,pos.toString())
+                                getPayments(idUser, pos.toString())
                             }.show()
                         }
                         .addOnFailureListener {
@@ -233,11 +264,10 @@ class ProductInfo : AppCompatActivity() {
         dialog.show()
     }
 
-
     class AdapterPayments(var conx: Context, var list: ArrayList<Payment>) : RecyclerView.Adapter<AdapterPayments.MyHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdapterPayments.MyHolder {
-            val myView = LayoutInflater.from(conx).inflate(R.layout.card_payment,parent,false)
+            val myView = LayoutInflater.from(conx).inflate(R.layout.card_payment, parent, false)
             return MyHolder(myView)
         }
 

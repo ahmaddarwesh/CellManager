@@ -28,7 +28,7 @@ class ProfileClient : AppCompatActivity() {
 
     private var db = FirebaseFirestore.getInstance()
     private var Docu = db.collection("Users")
-    private var MyList = ArrayList<products>()
+    private var MyList = ArrayList<Products>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,7 +55,7 @@ class ProfileClient : AppCompatActivity() {
                 tv_disc.text = Desc
 
             } else {
-                Toast.makeText(this, "ERROR ${it.exception}", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Error ${it.exception}", Toast.LENGTH_LONG).show()
             }
         }
 
@@ -75,7 +75,7 @@ class ProfileClient : AppCompatActivity() {
 
                         })
                     } else {
-                        Toast.makeText(this, "ERROR ${it.exception!!.message}", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this, "Error ${it.exception!!.message}", Toast.LENGTH_LONG).show()
                     }
                 }
 
@@ -149,7 +149,7 @@ class ProfileClient : AppCompatActivity() {
                 })
                 dialog.show()
             } catch (E: Exception) {
-                Toast.makeText(this, E.message, Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Error " + E.message, Toast.LENGTH_LONG).show()
             }
 
 
@@ -190,6 +190,7 @@ class ProfileClient : AppCompatActivity() {
                 Docu.document("USER_$id")
                         .delete()
                         .addOnSuccessListener { it1 ->
+
                             SweetAlert().sweetAlertDialog(this@ProfileClient, "Deleted",
                                     "The Client Successfully Deleted!",
                                     SweetAlertDialog.SUCCESS_TYPE,
@@ -258,6 +259,7 @@ class ProfileClient : AppCompatActivity() {
             Docu.document("USER_$id").update(UserNewInfo)
                     .addOnCompleteListener {
                         if (it.isSuccessful) {
+
                             SweetAlert().sweetAlertDialog(this, "Updated Successfully",
                                     "Client info was updated successfully",
                                     SweetAlertDialog.SUCCESS_TYPE, "Ok")
@@ -307,7 +309,7 @@ class ProfileClient : AppCompatActivity() {
 
             dialog.show()
         } catch (e: Exception) {
-            Toast.makeText(this, "Error Catch ${e.message}", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Error ${e.message}", Toast.LENGTH_LONG).show()
         }
 
     }
@@ -339,6 +341,7 @@ class ProfileClient : AppCompatActivity() {
             MediaStore.Images.Media.insertImage(contentResolver, bmp, "USER_$id.jpeg", "Cell manager Clients");
             fOut.flush()
             fOut.close()
+
             SweetAlert().sweetAlertDialog(this, "Success saved",
                     "Image is successfully saved in:\n $dir",
                     SweetAlertDialog.SUCCESS_TYPE,
@@ -346,8 +349,6 @@ class ProfileClient : AppCompatActivity() {
                 it.dismiss()
 
             }.show()
-            Toast.makeText(this, "Success saved in $dir", Toast.LENGTH_LONG).show()
-
         } catch (e: Exception) {
             SweetAlert().sweetAlertDialog(this, "Not Saved!",
                     "Image Not Saved Because:\n${e.message}",
@@ -360,7 +361,7 @@ class ProfileClient : AppCompatActivity() {
 
     }
 
-    inner class AdapterOfProducts(var conx: Context, var list: ArrayList<products>, var idUser: String, var name_of_user: String) : RecyclerView.Adapter<AdapterOfProducts.MyHolderPro>() {
+    inner class AdapterOfProducts(var conx: Context, var list: ArrayList<Products>, var idUser: String, var name_of_user: String) : RecyclerView.Adapter<AdapterOfProducts.MyHolderPro>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolderPro {
             val myView = LayoutInflater.from(conx).inflate(R.layout.card_list_products, parent, false)
             return MyHolderPro(myView)
@@ -372,9 +373,11 @@ class ProfileClient : AppCompatActivity() {
             holder.ComName.text = myL.CompanyName
             holder.Date.text = myL.Date
 
+            if (myL.isDone == "1") {
+                holder.imgDone.visibility = View.VISIBLE
+            }
             holder.lay.setOnClickListener {
                 val pos = position + 1
-                Toast.makeText(this@ProfileClient, "Y $pos", Toast.LENGTH_LONG).show()
                 val nameOfUser = name_of_user
 
                 conx.startActivity(Intent(conx, ProductInfo::class.java)
@@ -400,6 +403,7 @@ class ProfileClient : AppCompatActivity() {
             var ComName = view.findViewById<TextView>(R.id.tv_company_name)
             var Date = view.findViewById<TextView>(R.id.tv_date_product)
             var lay = view.findViewById<ConstraintLayout>(R.id.lay_product)
+            var imgDone = view.findViewById<ImageView>(R.id.img_done)
         }
 
     }
@@ -408,8 +412,8 @@ class ProfileClient : AppCompatActivity() {
         super.onResume()
         MyList.clear()
 
-        val id = intent.extras.getString("ID")
-        val name = intent.extras.getString("Name")
+        val id = intent.extras!!.getString("ID")
+        val name = intent.extras!!.getString("Name")
 
         Docu.document("USER_$id").collection("Products").get()
                 .addOnCompleteListener {
@@ -422,12 +426,14 @@ class ProfileClient : AppCompatActivity() {
                             val ProductPrice = doc.get("ProductPrice")
                             val date = doc.get("ProductDate")
                             val time = doc.get("ProductTime")
-                            MyList.add(products(companyName.toString(), CountPayments.toString(), FirstPayment.toString()
-                                    , ProductName.toString(), ProductPrice.toString(), date.toString(), time.toString()))
+                            val isDone = doc.get("IsDone")
+
+                            MyList.add(Products(companyName.toString(), CountPayments.toString(), FirstPayment.toString()
+                                    , ProductName.toString(), ProductPrice.toString(), date.toString(), time.toString(), isDone.toString()))
                         }
 
                         recy_pro.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
-                        val adapter = AdapterOfProducts(this, MyList, id, name)
+                        val adapter = AdapterOfProducts(this, MyList, id!!, name!!)
                         recy_pro.adapter = adapter
                         if (!MyList.isEmpty()) {
                             recy_pro.visibility = View.VISIBLE
@@ -436,7 +442,7 @@ class ProfileClient : AppCompatActivity() {
 
                 }
                 .addOnFailureListener {
-                    Toast.makeText(this, "ERROR : ${it.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "Error : ${it.message}", Toast.LENGTH_LONG).show()
                 }
     }
 

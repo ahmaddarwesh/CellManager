@@ -4,29 +4,30 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
-import android.os.Bundle
-import android.provider.MediaStore
-import android.view.Window
-import android.widget.ImageView
-import kotlinx.android.synthetic.main.activity_create_client.*
-import cn.pedant.SweetAlert.SweetAlertDialog
-import android.widget.Toast
-import com.google.firebase.database.*
-import com.google.firebase.firestore.FirebaseFirestore
-
-import java.util.*
-
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.Uri
+import android.os.Bundle
+import android.provider.MediaStore
 import android.support.design.widget.Snackbar
+import android.support.v7.app.AppCompatActivity
 import android.view.View
+import android.view.Window
+import android.widget.ImageView
+import android.widget.Toast
+import cn.pedant.SweetAlert.SweetAlertDialog
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-
 import com.google.firebase.storage.StorageReference
+import kotlinx.android.synthetic.main.activity_create_client.*
 import maes.tech.intentanim.CustomIntent
+import java.util.*
 
 
 class CreateClient : AppCompatActivity() {
@@ -44,14 +45,13 @@ class CreateClient : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_client)
 
-        if(!isOnline()){
+        if (!isOnline()) {
             val sandbar = Snackbar
                     .make(con_cc, "Check your internet connection", Snackbar.LENGTH_LONG)
             sandbar.view.setBackgroundColor(Color.RED)
             sandbar.duration = 1500
             sandbar.show()
         }
-
 
         Count.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
@@ -60,26 +60,25 @@ class CreateClient : AppCompatActivity() {
             }
 
             override fun onCancelled(p0: DatabaseError) {
-                SweetAlert().sweetAlertDialog(this@CreateClient,"Error",
+                SweetAlert().sweetAlertDialog(this@CreateClient, "Error",
                         p0.message,
                         SweetAlertDialog.ERROR_TYPE,
                         "Ok").setConfirmButton("Ok") {
                     it.dismiss()
                 }.show()
             }
-
         })
 
         profile_info_image.setOnClickListener {
-             showDialog(this)
+            showDialog(this)
         }
 
 
 
         imgSuccess.setOnClickListener { it ->
-             if (edt_fullname.text.trim().isEmpty() || edt_phonenumber.text.trim().isEmpty()
+            if (edt_fullname.text.trim().isEmpty() || edt_phonenumber.text.trim().isEmpty()
                     || edt_address.text.trim().isEmpty() || desc.text.trim().isEmpty()) {
-                SweetAlert().sweetAlertDialog(this,"Field Required!",
+                SweetAlert().sweetAlertDialog(this, "Field Required!",
                         "You cannot leave field empty.\nCompletion info to continue",
                         SweetAlertDialog.ERROR_TYPE,
                         "Ok").setConfirmButton("Ok") {
@@ -107,7 +106,7 @@ class CreateClient : AppCompatActivity() {
                 if (!isOnline()) {
                     progressBarLoading.visibility = View.GONE
                     imgSuccess.visibility = View.VISIBLE
-                    SweetAlert().sweetAlertDialog(this,"Error",
+                    SweetAlert().sweetAlertDialog(this, "Error",
                             "Check Your Internet Connection!",
                             SweetAlertDialog.ERROR_TYPE,
                             "Ok").setConfirmButton("Ok") {
@@ -123,7 +122,7 @@ class CreateClient : AppCompatActivity() {
                                 Cookies().SaveInt(this, "ID", id1)
                                 Count.setValue(id1)
 
-                                SweetAlert().sweetAlertDialog(this,"Success",
+                                SweetAlert().sweetAlertDialog(this, "Success",
                                         "Successfully added client",
                                         SweetAlertDialog.SUCCESS_TYPE,
                                         "Done").setConfirmButton("Done") {
@@ -136,7 +135,7 @@ class CreateClient : AppCompatActivity() {
 
                             }
                             .addOnFailureListener { it1 ->
-                                SweetAlert().sweetAlertDialog(this,"Error",
+                                SweetAlert().sweetAlertDialog(this, "Error",
                                         "${it1.message}",
                                         SweetAlertDialog.ERROR_TYPE,
                                         "Ok").setConfirmButton("Ok") {
@@ -153,7 +152,6 @@ class CreateClient : AppCompatActivity() {
         }
 
     }
-
 
 
     fun showDialog(activity: Activity) {
@@ -182,7 +180,7 @@ class CreateClient : AppCompatActivity() {
             }
             dialog.show()
         } catch (E: Exception) {
-            SweetAlert().sweetAlertDialog(this,"Error",
+            SweetAlert().sweetAlertDialog(this, "Error",
                     "${E.message}",
                     SweetAlertDialog.ERROR_TYPE,
                     "Ok").setConfirmButton("Ok") {
@@ -203,21 +201,22 @@ class CreateClient : AppCompatActivity() {
                     urlImage = Uri.parse(selectedImage)
                     profile_info_image.setImageBitmap(bit)
 
-
                 } else if (requestCode == requstGallery) {
 
-                    val selectedImage = data!!.data
-                    urlImage = selectedImage
-                    profile_info_image.setImageURI(selectedImage)
-
+                    val bit = toBit(data!!.data!!)
+                    val selectedImage = MediaStore.Images.Media.insertImage(contentResolver, bit, "any", null);
+                    urlImage = Uri.parse(selectedImage)
+                    profile_info_image.setImageBitmap(bit)
+//                    val selectedImage = data!!.data
+//                    urlImage = selectedImage
+//                    profile_info_image.setImageURI(selectedImage)
 
                 } else {
-                    Toast.makeText(this, "From else", Toast.LENGTH_LONG).show()
                     val selectedImage = data!!.data
                     urlImage = selectedImage
                 }
-            }else{
-                SweetAlert().sweetAlertDialog(this,"No Selected!",
+            } else {
+                SweetAlert().sweetAlertDialog(this, "No Selected!",
                         "No image Selected Please Select to continue!",
                         SweetAlertDialog.ERROR_TYPE,
                         "Ok").setConfirmButton("Ok") {
@@ -227,7 +226,7 @@ class CreateClient : AppCompatActivity() {
 
 
         } catch (e: Exception) {
-            SweetAlert().sweetAlertDialog(this,"Error",
+            SweetAlert().sweetAlertDialog(this, "Error",
                     "No image Selected ${e.message}",
                     SweetAlertDialog.ERROR_TYPE,
                     "Ok").setConfirmButton("Ok") {
@@ -236,6 +235,20 @@ class CreateClient : AppCompatActivity() {
         }
 
     }
+
+    fun toBit(uri: Uri): Bitmap {
+        val filePath = arrayOf<String>(MediaStore.Images.Media.DATA)
+        val cursor = contentResolver.query(uri, filePath, null, null, null)
+        cursor!!.moveToFirst()
+        val imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]))
+        val options = BitmapFactory.Options()
+        options.inPreferredConfig = Bitmap.Config.ARGB_8888
+        val bitmap = BitmapFactory.decodeFile(imagePath, options)
+        cursor.close()
+        return bitmap
+
+    }
+
 
     fun uploadImage() {
         try {
@@ -260,8 +273,8 @@ class CreateClient : AppCompatActivity() {
                     val downloadUri = task.result!!
                     Users.document("USER_$id").update("img_url", downloadUri.toString())
                 } else {
-                    SweetAlert().sweetAlertDialog(this,"Error",
-                            "Image not Uploaded",
+                    SweetAlert().sweetAlertDialog(this, "Error",
+                            "Image not Uploaded ${task.exception}",
                             SweetAlertDialog.ERROR_TYPE,
                             "Ok").setConfirmButton("Ok") {
                         it.dismiss()
@@ -270,12 +283,8 @@ class CreateClient : AppCompatActivity() {
             }
 
         } catch (E: Exception) {
-            SweetAlert().sweetAlertDialog(this,"Error",
-                    "${E.message}",
-                    SweetAlertDialog.ERROR_TYPE,
-                    "Ok").setConfirmButton("Ok") {
-                it.dismiss()
-            }.show()
+            Toast.makeText(this, "Error${E.message}", Toast.LENGTH_LONG).show()
+
         }
 
 
@@ -291,7 +300,7 @@ class CreateClient : AppCompatActivity() {
                 && edt_address.text.trim().isEmpty() && desc.text.trim().isEmpty()) {
             finish()
         } else {
-            SweetAlert().sweetAlertConf(this,"Discard info!", "Are you sure discard information you typed?",
+            SweetAlert().sweetAlertConf(this, "Discard info!", "Are you sure discard information you typed?",
                     SweetAlertDialog.WARNING_TYPE, "Cancel", "Discard").setConfirmButton("Cancel") {
                 it.dismiss()
             }.setCancelButton("Discard") {

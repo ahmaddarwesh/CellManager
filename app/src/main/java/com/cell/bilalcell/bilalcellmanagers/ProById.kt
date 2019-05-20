@@ -22,15 +22,15 @@ import java.util.*
 
 class ProById : AppCompatActivity() {
     private var db = FirebaseFirestore.getInstance()
-    private var MyList = ArrayList<products>()
+    private var MyList = ArrayList<Products>()
     private var Docu = db.collection("Users")
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pro_by_id)
-        val id = intent.extras.getString("ID")
-        val name = intent.extras.getString("nameOfUser")
+        val id = intent.extras!!.getString("ID")
+        val name = intent.extras!!.getString("nameOfUser")
 
 
         Docu.document("USER_$id").collection("Products").get()
@@ -44,9 +44,10 @@ class ProById : AppCompatActivity() {
                             val ProductPrice = doc.get("ProductPrice")
                             val date = doc.get("ProductDate")
                             val time = doc.get("ProductTime")
+                            val isDone = doc.get("IsDone")
 
-                            MyList.add(products(companyName.toString(), CountPayments.toString(), FirstPayment.toString()
-                                    , ProductName.toString(), ProductPrice.toString(), date.toString(), time.toString()))
+                            MyList.add(Products(companyName.toString(), CountPayments.toString(), FirstPayment.toString()
+                                    , ProductName.toString(), ProductPrice.toString(), date.toString(), time.toString(),isDone.toString()))
                         }
 
                         if (MyList.isEmpty()) {
@@ -69,7 +70,7 @@ class ProById : AppCompatActivity() {
     }
 
 
-    class AdapterOfProducts2(var conx: Context, var list: ArrayList<products>, var idUser: String, var nameOfUser: String) : RecyclerView.Adapter<AdapterOfProducts2.MyHolderPro2>() {
+    class AdapterOfProducts2(var conx: Context, var list: ArrayList<Products>, var idUser: String, var nameOfUser: String) : RecyclerView.Adapter<AdapterOfProducts2.MyHolderPro2>() {
         var typeC1 = 0
         var db = FirebaseFirestore.getInstance()
         var Products = db.collection("Users")
@@ -82,6 +83,10 @@ class ProById : AppCompatActivity() {
             holder.NamePro.text = myL.ProductName
             holder.ComName.text = myL.CompanyName
             holder.date.text = myL.Date
+
+            if(myL.isDone == "1"){
+                holder.isDone.visibility = View.VISIBLE
+            }
             holder.lay.setOnClickListener {
                 val pos = position + 1
 //                conx.startActivity(Intent(conx, ProductInfo::class.java).
@@ -93,7 +98,6 @@ class ProById : AppCompatActivity() {
 //                        putExtra("NameUser", nameOfUser))
 
                 DialogAddPay(myL.ProductName, pos)
-
 
             }
         }
@@ -163,10 +167,10 @@ class ProById : AppCompatActivity() {
                         if (it.isSuccessful) {
                             CountPay = it.result!!.getLong("CountPayments")!!.toLong() + 1
                         } else {
-                            Toast.makeText(conx, "Error else ${it.result}", Toast.LENGTH_LONG).show()
+                            Toast.makeText(conx, "Error ${it.result}", Toast.LENGTH_LONG).show()
                         }
                     }.addOnFailureListener {
-                        Toast.makeText(conx, "Error F ${it.message}", Toast.LENGTH_LONG).show()
+                        Toast.makeText(conx, "Error ${it.message}", Toast.LENGTH_LONG).show()
                     }
 
             addBtn.setOnClickListener {
@@ -184,6 +188,7 @@ class ProById : AppCompatActivity() {
                             .addOnSuccessListener {
                                 Products.document("Product_$pos").update("CountPayments", CountPay)
                                 dialog.dismiss()
+
                                 SweetAlert().sweetAlertDialog(conx, "Added Successfully", "Success the add payment to $name Phone", SweetAlertDialog.SUCCESS_TYPE,
                                         "Ok").setConfirmButton("Ok") {
                                     it.dismiss()
@@ -224,6 +229,7 @@ class ProById : AppCompatActivity() {
             var ComName = view.findViewById<TextView>(R.id.tv_company_name)
             var lay = view.findViewById<ConstraintLayout>(R.id.lay_product)
             var date = view.findViewById<TextView>(R.id.tv_date_product)
+            var isDone = view.findViewById<ImageView>(R.id.img_done)
         }
 
     }

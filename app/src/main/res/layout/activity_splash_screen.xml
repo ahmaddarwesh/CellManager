@@ -5,7 +5,7 @@
     android:id="@+id/con_lay"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/backg_card"
+    android:background="@color/text_color"
     tools:context=".splashScreen">
 
     <ImageView
@@ -29,7 +29,7 @@
         android:layout_marginBottom="8dp"
         android:text="جميع الحقوق محفوظة © 2018م "
         android:textAlignment="center"
-        android:textColor="@color/newcolor"
+        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -43,7 +43,7 @@
         android:fontFamily="sans-serif-smallcaps"
         android:text="Buy One Time\nUse Forever"
         android:textAlignment="center"
-        android:textColor="@color/red_btn_bg_pressed_color"
+        android:textColor="#F8F5F5"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"

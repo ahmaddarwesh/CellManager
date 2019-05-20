@@ -39,7 +39,7 @@ class CreateProduct : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_product)
 
-        val id = intent.extras.getString("ID")
+        val id = intent.extras!!.getString("ID")
         initCompanies()
 
         if (!isOnline()) {
@@ -56,8 +56,7 @@ class CreateProduct : AppCompatActivity() {
                 .addOnCompleteListener {
                     if (it.isSuccessful) {
                         countP = it.result!!.getLong("CountProduct")!!.toLong() + 1
-                        Toast.makeText(this, "Geted it!", Toast.LENGTH_LONG).show()
-                    } else {
+                     } else {
                         Toast.makeText(this, "ERROR ${it.exception!!.message}", Toast.LENGTH_LONG).show()
                     }
                 }
@@ -137,7 +136,7 @@ class CreateProduct : AppCompatActivity() {
                 Product.put("CountPayments", 1)
                 Product.put("ProductTime", t)
                 Product.put("ID", countP)
-
+                Product.put("IsDone","0")
 
                 val payment = HashMap<String, Any>()
                 payment.put("PayCash", FirstPay)
@@ -159,6 +158,8 @@ class CreateProduct : AppCompatActivity() {
                                         .collection("Payments")
                                         .document("Payment_1")
                                         .set(payment)
+
+
                                 SweetAlert().sweetAlertDialog(this, "Successful", "Done Successfully add Product", SweetAlertDialog.SUCCESS_TYPE,
                                         "Done").setConfirmButton("Done") {
                                     Users.document("USER_$id").update(
