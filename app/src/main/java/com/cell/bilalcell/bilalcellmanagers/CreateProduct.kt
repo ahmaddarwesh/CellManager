@@ -4,9 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.net.ConnectivityManager
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.AdapterView
 import android.widget.Toast
@@ -56,7 +56,7 @@ class CreateProduct : AppCompatActivity() {
                 .addOnCompleteListener {
                     if (it.isSuccessful) {
                         countP = it.result!!.getLong("CountProduct")!!.toLong() + 1
-                     } else {
+                    } else {
                         Toast.makeText(this, "ERROR ${it.exception!!.message}", Toast.LENGTH_LONG).show()
                     }
                 }
@@ -136,7 +136,7 @@ class CreateProduct : AppCompatActivity() {
                 Product.put("CountPayments", 1)
                 Product.put("ProductTime", t)
                 Product.put("ID", countP)
-                Product.put("IsDone","0")
+                Product.put("IsDone", "0")
 
                 val payment = HashMap<String, Any>()
                 payment.put("PayCash", FirstPay)

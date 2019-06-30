@@ -26,8 +26,11 @@ import android.widget.Toast
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.QuerySnapshot
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_accounts_list.*
@@ -71,7 +74,11 @@ class AccountsList : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
+                if (s.isNullOrBlank()) {
+                    getClients()
+                } else {
+                    filtering(s.toString())
+                }
             }
 
         })
@@ -84,6 +91,7 @@ class AccountsList : AppCompatActivity() {
     }
 
     private fun getClients() {
+        OnFilter = false
         val Myquery: Query = UsersD
         val option = FirestoreRecyclerOptions.Builder<Clients>()
                 .setQuery(Myquery, Clients::class.java)
@@ -98,23 +106,66 @@ class AccountsList : AppCompatActivity() {
         Adapter!!.notifyDataSetChanged()
     }
 
-    fun filtering(s: String) {
+    fun filtering(Word: String) {
         OnFilter = true
-        val Myquery: Query = UsersD.whereEqualTo("Name", s)
 
-        val option = FirestoreRecyclerOptions.Builder<Clients>()
-                .setQuery(Myquery, Clients::class.java)
-                .build()
-
-        Adapter = newAdapter(this, option)
-        val recy = findViewById<RecyclerView>(R.id.recy)
-        recy.layoutManager = LinearLayoutManager(this)
-        recy.setHasFixedSize(true)
-        recy.adapter = Adapter
-        Adapter!!.startListening()
-        Adapter!!.notifyDataSetChanged()
+        getClientByName(Word)
+//        val Myquery: Query = UsersD.whereEqualTo("Name", Word)
+//
+//        val option = FirestoreRecyclerOptions.Builder<Clients>()
+//                .setQuery(Myquery, Clients::class.java)
+//                .build()
+//
+//        Adapter = newAdapter(this, option)
+//        val recy = findViewById<RecyclerView>(R.id.recy)
+//        recy.layoutManager = LinearLayoutManager(this)
+//        recy.setHasFixedSize(true)
+//        recy.adapter = Adapter
+//        Adapter!!.startListening()
+//        Adapter!!.notifyDataSetChanged()
     }
 
+    fun getClientByName(Word: String) {
+        val list = ArrayList<Clients>()
+        UsersD.get().addOnCompleteListener { task ->
+            for (Doc in task.result!!.documents) {
+                val Name = Doc["Name"].toString().toLowerCase()
+                val Desc = Doc["Description"].toString().toLowerCase()
+                if (Name.contains(Word.toLowerCase())) {
+                    val ID = Doc["ID"].toString().toLong()
+                    val PhoneNumber = Doc["PhoneNumber"].toString()
+                    list.add(Clients(ID, Name, PhoneNumber))
+                }
+            }
+            if (list.isEmpty()) {
+                for (Doc in task.result!!.documents) {
+                    val Name = Doc["Name"].toString().toLowerCase()
+                    val Desc = Doc["Description"].toString().toLowerCase()
+                    if (Desc.contains(Word.toLowerCase())) {
+                        val ID = Doc["ID"].toString().toLong()
+                        val PhoneNumber = Doc["PhoneNumber"].toString()
+                        list.add(Clients(ID, Name, PhoneNumber))
+                    }
+                }
+            }
+            recy.adapter = AdapterNormal(this@AccountsList, list)
+            recy.layoutManager = LinearLayoutManager(this@AccountsList)
+            recy.setHasFixedSize(true)
+            recy.adapter!!.notifyDataSetChanged()
+        }
+
+//        val Name = it["Name"].toString()
+//        if (Name.contains(Word)) {
+//            val ID = it["ID"].toString().toLong()
+//            val PhoneNumber = it["PhoneNumber"].toString()
+//            list.add(Clients(ID, Name, PhoneNumber))
+//        }
+//        recy.adapter = AdapterNormal(this, list)
+//        recy.layoutManager = LinearLayoutManager(this)
+//        recy.setHasFixedSize(true)
+//        recy.adapter!!.notifyDataSetChanged()
+//        Toast.makeText(this, "List: $list", Toast.LENGTH_LONG).show()
+    }
 
     override fun onBackPressed() {
         if (OnFilter) {
@@ -262,6 +313,7 @@ class AccountsList : AppCompatActivity() {
                     Toast.makeText(this@AccountsList, "ERROR ${it.exception!!.message}", Toast.LENGTH_LONG).show()
                 }
             }
+
         }
 
         override fun onCreateViewHolder(p0: ViewGroup, p1: Int): HolderMe {
@@ -282,6 +334,81 @@ class AccountsList : AppCompatActivity() {
 
     }
 
+    inner class AdapterNormal(var conx: Context, var list: ArrayList<Clients>)
+        : RecyclerView.Adapter<AdapterNormal.Holder>() {
+        override fun onCreateViewHolder(p0: ViewGroup, p1: Int): Holder {
+            val myView = LayoutInflater.from(conx).inflate(R.layout.card_list_users, p0, false)
+            return Holder(myView)
+        }
+
+        override fun getItemCount(): Int {
+            return list.size
+        }
+
+        override fun onBindViewHolder(holder: Holder, position: Int) {
+            holder.name.text = list[position].Name
+            holder.number.text = list[position].PhoneNumber
+            holder.ID.text = list[position].ID.toString()
+            holder.more.setOnClickListener {
+                if (t == 0) {
+                    conx.startActivity(Intent(conx, ProfileClient::class.java)
+                            .putExtra("ID", list[position].ID.toString())
+                            .putExtra("Name", list[position].Name)
+                            .putExtra("Number", list[position].PhoneNumber))
+                    CustomIntent.customType(conx, "up-to-bottom")
+                } else {
+                    conx.startActivity(Intent(conx, ProById::class.java)
+                            .putExtra("ID", list[position].ID.toString())
+                            .putExtra("nameOfUser", list[position].Name))
+                    CustomIntent.customType(conx, "up-to-bottom")
+                }
+            }
+
+            holder.more.setOnLongClickListener {
+                dialogOptions(list[position].ID.toString(), list[position].Name, list[position].PhoneNumber)
+                false
+            }
+
+            Picasso.get()
+                    .load(R.drawable.loading_profile)
+                    .into(holder.profile_Image)
+            UsersD.document("USER_${list[position].ID}").get().addOnCompleteListener {
+                if (it.isSuccessful) {
+                    val img = Uri.parse(it.result!!.get("img_url").toString())
+                    it.addOnCompleteListener {
+                        if (it.result!!.data!!.isEmpty()) {
+                            Picasso.get().load(R.drawable.loading_profile).into(holder.profile_Image)
+                        }
+                        Picasso.get()
+                                .load(img)
+                                .into(holder.tset, object : Callback {
+                                    override fun onSuccess() {
+                                        Picasso.get().load(img).into(holder.profile_Image)
+                                    }
+
+                                    override fun onError(e: Exception?) {
+                                        Picasso.get().load(R.drawable.loading_profile).into(holder.profile_Image)
+                                    }
+                                })
+                    }
+
+                } else {
+                    Toast.makeText(this@AccountsList, "ERROR ${it.exception!!.message}", Toast.LENGTH_LONG).show()
+                }
+            }
+
+        }
+
+        inner class Holder(view: View) : RecyclerView.ViewHolder(view) {
+            val name = view.findViewById<TextView>(R.id.Name_c)
+            val number = view.findViewById<TextView>(R.id.Num_c)
+            val ID = view.findViewById<TextView>(R.id.ID)
+            val more = view.findViewById<ConstraintLayout>(R.id.More_c)
+            val profile_Image = view.findViewById<ImageView>(R.id.profile_image_c)
+            val tset = view.findViewById<ImageView>(R.id.img_test)
+        }
+
+    }
 
     override fun onStart() {
         super.onStart()
